@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->char('phone',11)->unique();
             $table->string('name')->nullable();
             $table->string('headimgurl');
-            $table->string('email')->unique();
             $table->string('password')->unique();
             $table->string('wechat_id')->unique();
             $table->string('qq_id')->unique();
