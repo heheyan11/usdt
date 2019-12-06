@@ -13,7 +13,7 @@ class CreateUserWalltsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_wallts', function (Blueprint $table) {
+        Schema::create('user_wallets', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->index('user_id');

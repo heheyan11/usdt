@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\ChongOrder;
-use App\Models\UserWallt;
+use App\Models\User;
+use App\Models\UserWallet;
 use Illuminate\Http\Request;
 
 
@@ -12,23 +13,34 @@ class WalletController
 {
     private $privateKey= ['merchantkey'=>'dhasdiuahwfiuagbvkasbdiasbkcgafbasdas'];
 
+    protected function validate(){
+        \Validator::make(
+            \request()->input(),
+            ['amount'=>'required|min:1'],
+            ['required'=>':attribute 为必填项'],
+            ['amount'=>'金额']
+        )->validate();
+    }
+
     public function refound(){
 
+        $this->validate();
+        $amount = \request()->input('amount');
+        $wallet = User::query()->where('id',12)->first()->wallet;
         $param = [
           'symbol'=>'usdt',
           'merchantId'=>'123456',
-          'orderAmount'=>100,
+          'orderAmount'=>$amount,
           'signType'=>'MD5',
-          'address'=>'dsfdsf'
+          'address'=>$wallet->address
         ];
-
         $param = $this->getSign($param);
         $guzzle = new \GuzzleHttp\Client();
-        $url = 'http://172.17.198.235/api/CallWithdrawal';
+        $url = 'http://39.107.156.221/api/CallWithdrawal';
 
         $response = $guzzle->post($url,$param);
         $rs = json_decode($response->getBody()->getContents(),true);
-        
+        dd($rs);die;
 
     }
 
@@ -48,7 +60,7 @@ class WalletController
         if(!$this->checkSign($param)){
             return '错误';
         }
-        $wallet = UserWallt::query()->where('address',$param['address_to'])->first();
+        $wallet = UserWallet::query()->where('address',$param['address_to'])->first();
         if(!$wallet){
             return response()->json(['code'=>412,'message'=>'该钱包地址不存在']);
         }
@@ -80,6 +92,7 @@ class WalletController
         foreach ($param as $key=>$value){
             $str .= (trim($key).'='.trim($value).'&');
         }
+
         $param['sign'] = md5(substr($str,0,-1));
         return $param;
     }

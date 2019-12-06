@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\InternalException;
 
-use App\Http\Requests\PhoneRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Models\Wechat;
@@ -29,7 +28,7 @@ class LoginController extends BasePass
      * @remark 无
      * @number 5
      */
-    public function code(PhoneRequest $request)
+    public function code(RegisterRequest $request)
     {
         $phone = $request->input('phone');
         $res = app(SmsService::class)->sendSmsCode($phone, '4102536');

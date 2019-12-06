@@ -26,19 +26,7 @@ Route::post('/recharge','WalletController@recharge');
 Route::post('/refound','WalletController@refound');
 
 Route::get('/test',function (){
-    $arr =[
-        'errcode'=>0,
-        'data'=>[
-            'eth'=>[
-                'address'=>'sdfsdafe4ffdsfdsfdsfsdfsdafsdafsdafsdafdsaf',
-                'ostime'=>1332424222,
-                'id'=>123213,
-                'privatekey'=>'dfdfewf32f32f23f23f23f32f',
-                'mnemonic'=>'fsdf sdf sdf  sadf fsda sadf sdaf sdaf ',
-            ]
-        ]
-    ];
-   return response()->json($arr);
+    return \App\Models\User::with('wallet')->first();
 });
 
 
