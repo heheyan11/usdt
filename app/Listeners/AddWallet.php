@@ -20,7 +20,7 @@ class AddWallet implements ShouldQueue
     {
 
         $guzzle = new \GuzzleHttp\Client();
-        $url = 'http://localhost/api/test';
+        $url = 'http://39.107.156.221/api/GenerateAddress';
 
         $response = $guzzle->get($url);
         $rs = json_decode($response->getBody()->getContents(),true)['data']['eth'];

@@ -72,7 +72,12 @@ class LoginController extends BasePass
 
             $user = User::query()->where('phone',$param['phone'])->first();
             if(!$user){
-                $user = User::create(['phone'=>$param['phone']]);
+
+                $user = User::create([
+                    'phone'=>$param['phone'],
+                    'headimgurl'=>'http://aliyunzixunbucket.oss-cn-beijing.aliyuncs.com/webimg/help/8.png'
+                ]);
+
                 event(new Registered($user));
                 //如果绑定微信
                 if(isset($param['wechat_openid'])){

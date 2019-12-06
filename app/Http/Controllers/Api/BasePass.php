@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Exceptions\InternalException;
-
+use Laravel\Passport\Client;
 
 
 class BasePass
@@ -31,9 +31,11 @@ class BasePass
 
     protected function passport(){
 
+        $password_client = Client::query()->where('password_client',1)->latest()->first();
+
         $param = array_merge($this->param,[
-            'client_id' => '2',
-            'client_secret' => '3FSZfDpo4L6w7MHLHY9gHpUTK6xFFFtHWR0OX4pJ',
+            'client_id' => $password_client->id,
+            'client_secret' => $password_client->secret,
         ]);
 
        /* $guzzle = new \GuzzleHttp\Client();

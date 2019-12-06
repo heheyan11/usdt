@@ -26,6 +26,7 @@ class WalletController
 
         $this->validate();
         $amount = \request()->input('amount');
+
         $wallet = User::query()->where('id',12)->first()->wallet;
         $param = [
           'symbol'=>'usdt',
