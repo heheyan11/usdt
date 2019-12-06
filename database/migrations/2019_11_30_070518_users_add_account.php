@@ -16,7 +16,6 @@ class UsersAddAccount extends Migration
         Schema::table('users', function (Blueprint $table) {
              $table->integer('wechat_id')->nullable()->after('password');
              $table->integer('qq_id')->nullable()->after('wechat_id');
-             $table->char('phone',11)->after('id');
         });
     }
 
@@ -30,7 +29,6 @@ class UsersAddAccount extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('wechat_id');
             $table->dropColumn('qq_id');
-            $table->dropColumn('phone');
         });
     }
 }

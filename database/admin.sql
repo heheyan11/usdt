@@ -21,7 +21,7 @@
 
 LOCK TABLES `admin_menu` WRITE;
 /*!40000 ALTER TABLE `admin_menu` DISABLE KEYS */;
-INSERT INTO `admin_menu` VALUES (1,0,1,'面板','fa-bar-chart','/',NULL,NULL,NULL),(2,0,2,'管理员','fa-tasks','',NULL,NULL,NULL),(3,2,3,'用户','fa-users','auth/users',NULL,NULL,NULL),(4,2,4,'角色','fa-user','auth/roles',NULL,NULL,NULL),(5,2,5,'权限','fa-ban','auth/permissions',NULL,NULL,NULL),(6,2,6,'菜单','fa-bars','auth/menu',NULL,NULL,NULL),(7,2,7,'操作日志','fa-history','auth/logs',NULL,NULL,NULL),(8,0,9,'内容管理','fa-delicious',NULL,NULL,'2019-10-21 02:32:29','2019-11-27 16:43:57'),(9,8,11,'新闻分类','fa-info','article-cates',NULL,'2019-10-21 02:33:44','2019-11-27 16:43:57'),(10,8,12,'新闻列表','fa-info-circle','articles',NULL,'2019-10-21 11:30:44','2019-11-27 16:43:57'),(12,8,14,'幻灯列表','fa-sliders','slides',NULL,'2019-10-21 16:12:41','2019-11-27 16:43:57');
+INSERT INTO `admin_menu` VALUES (1,0,1,'面板','fa-bar-chart','/',NULL,NULL,NULL),(2,0,4,'管理员','fa-user-secret',NULL,NULL,NULL,'2019-12-03 07:30:19'),(3,2,5,'用户','fa-users','auth/users',NULL,NULL,'2019-12-03 04:11:30'),(4,2,6,'角色','fa-user','auth/roles',NULL,NULL,'2019-12-03 04:11:30'),(5,2,7,'权限','fa-ban','auth/permissions',NULL,NULL,'2019-12-03 04:11:30'),(6,2,8,'菜单','fa-bars','auth/menu',NULL,NULL,'2019-12-03 04:11:30'),(7,2,9,'操作日志','fa-history','auth/logs',NULL,NULL,'2019-12-03 04:11:30'),(8,0,10,'内容管理','fa-delicious',NULL,NULL,'2019-10-21 02:32:29','2019-12-03 04:11:30'),(9,8,11,'新闻分类','fa-info','article-cates',NULL,'2019-10-21 02:33:44','2019-12-03 04:11:30'),(10,8,12,'新闻列表','fa-info-circle','articles',NULL,'2019-10-21 11:30:44','2019-12-03 04:11:30'),(12,8,13,'幻灯列表','fa-sliders','slides',NULL,'2019-10-21 16:12:41','2019-12-03 04:11:30'),(13,0,3,'理财计划','fa-btc','crowd-fundings',NULL,'2019-12-02 09:55:14','2019-12-03 07:29:48'),(14,0,2,'项目配置','fa-connectdevelop','configs/1/edit',NULL,'2019-12-03 04:11:20','2019-12-03 04:16:36'),(15,8,0,'通知公告','fa-leanpub','notices',NULL,'2019-12-03 07:24:26','2019-12-03 07:29:30');
 /*!40000 ALTER TABLE `admin_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,4 +103,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-02  9:25:17
+-- Dump completed on 2019-12-06  9:18:32
