@@ -29,10 +29,9 @@ Route::get('crow/detail','CrowController@detail');
 Route::get('crow/logcrow','CrowController@logcrow');
 
 Route::post('recharge','WalletController@recharge');
-Route::post('withdraw','WalletController@withDraw');
+
 
 Route::post('secret/setpass','SecretController@setLoginPass');
-
 
 Route::post('login','LoginController@login')->name('login');
 Route::post('refresh','LoginController@refresh');
@@ -40,15 +39,15 @@ Route::get('logout','LoginController@logout');
 
 Route::get('testt',function(){
     dd(Cache::forget('test'));
-   //return Cache::increment('test');
+    //return Cache::increment('test');
 });
 
 Route::group(['middleware'=>'auth:api'],function (){
-
     Route::post('crow/buy','CrowController@buy');
     Route::post('crow/quit','CrowController@quit');
 
     Route::get('wallet/index','WalletController@index');
+    Route::post('wallet/withdraw','WalletController@withDraw');
 
     Route::post('secret/checkpass','SecretController@checkpass');
     Route::post('secret/changephone','SecretController@changePhone');
@@ -62,10 +61,7 @@ Route::group(['middleware'=>'auth:api'],function (){
     Route::get('user/crows','UserController@crows');
 
     Route::post('article/parise','ArticleController@parise');
-
-
     Route::post('upload','UploadContoller@uploadImg');
-
 });
 
 

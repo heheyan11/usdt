@@ -217,6 +217,7 @@ class SecretController
         $user->update(['password' => bcrypt($pass)]);
         return response()->json(['code' => 200, 'message' => '设置登录密码成功']);
     }
+
     /**
      * showdoc
      * @catalog 安全
@@ -230,7 +231,7 @@ class SecretController
      * @return {"code":200,"message":'修改密码成功'}
      * @return_param code string 200：修改支付密码成功； 0：修改支付密码失败
      * @remark 无
-     * @number 5
+     * @number 6
      */
     public function changePayPass(RegisterRequest $request)
     {

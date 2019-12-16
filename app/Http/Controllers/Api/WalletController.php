@@ -47,23 +47,22 @@ class WalletController
         $param = $request->input();
         $user = \Auth::guard('api')->user();
 
-
-        $wallet = UserWallet::query()->where('user_id', $user->id)
-            ->select('amount', 'address','id')->lockForUpdate()->first();
-        if (bcomp($param['amount'], $wallet->amount) != 1) {
-            throw new VerifyException('您钱包的数量不足');
-        }
-        $config = get_conf();
-        if ($param['amount'] < $config['min_ti']) {
-            throw new VerifyException('最低提币额度为' . $config['min_ti']);
-        }
-        $param['rate'] = $config['refund_rate'];
-
-        $wallet->amount = bsub($wallet->amount, $param['amount']);
-        $wallet->save();
-        $user->orderti()->create($param);
-
-
+        \DB::transaction(function () use ($user, $param) {
+            $wallet = UserWallet::query()->where('user_id', $user->id)
+                ->select('amount', 'address', 'id')->lockForUpdate()->first();
+            if (bcomp($param['amount'], $wallet->amount) != 1) {
+                throw new VerifyException('您钱包的数量不足');
+            }
+            $config = get_conf();
+            if ($param['amount'] < $config['min_ti']) {
+                throw new VerifyException('最低提币额度为' . $config['min_ti']);
+            }
+            $param['rate'] = $config['refund_rate'];
+            $wallet->amount = bsub($wallet->amount, $param['amount']);
+            $wallet->save();
+            $user->orderti()->create($param);
+        });
+        return response()->json(['code'=>200,'message'=>'提交成功，请等待审核']);
 
         //TODO:写到后台
         $param = [
