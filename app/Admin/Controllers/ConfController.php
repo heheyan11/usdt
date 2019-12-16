@@ -54,7 +54,6 @@ class ConfController extends AdminController
         $form->decimal('refund_rate','提现手续费%')->required();
         $form->decimal('force_amount','基础升级额度(累计购买计划)')->required();
 
-
         return $form;
     }
 }

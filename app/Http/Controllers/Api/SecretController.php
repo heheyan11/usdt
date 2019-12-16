@@ -190,12 +190,33 @@ class SecretController
         if ($user->paypass) {
             throw new VerifyException('您已设置支付密码');
         }
-
         $user->update(['paypass' => bcrypt($pass)]);
         return response()->json(['code' => 200, 'message' => '设置支付密码成功']);
-
     }
 
+    /**
+     * showdoc
+     * @catalog 安全
+     * @title 设置登录密码
+     * @description 设置登录密码
+     * @method post
+     * @param password string 密码
+     * @url secret/setpassword
+     * @param password 必填 string 用户密码
+     * @return {"code":200,"message":'设置登录密码成功'}
+     * @remark 一次性接口
+     * @number 5
+     */
+    public function setPassPass(SetpassRequest $request)
+    {
+        $pass = $request->input('password');
+        $user = \Auth::guard('api')->user();
+        if ($user->password) {
+            throw new VerifyException('您已设置登录密码');
+        }
+        $user->update(['password' => bcrypt($pass)]);
+        return response()->json(['code' => 200, 'message' => '设置登录密码成功']);
+    }
     /**
      * showdoc
      * @catalog 安全

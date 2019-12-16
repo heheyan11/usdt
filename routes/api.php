@@ -53,6 +53,7 @@ Route::group(['middleware'=>'auth:api'],function (){
     Route::post('secret/checkpass','SecretController@checkpass');
     Route::post('secret/changephone','SecretController@changePhone');
     Route::post('secret/setpaypass','SecretController@setPayPass');
+    Route::post('secret/setpassword','SecretController@setPassPass');
     Route::post('secret/changepaypass','SecretController@changePayPass');
 
     Route::get('user/index','UserController@index');
