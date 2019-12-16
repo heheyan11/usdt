@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\InternalException;
 
+use App\Exceptions\VerifyException;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Models\Wechat;
@@ -25,7 +26,7 @@ class LoginController extends BasePass
      * @url login
      * @param phone 必选 string 手机号码
      * @param code 可选 string 手机验证码（code和password至少选择一个）
-     * @param password 可选 string 密码
+     * @param password 必填 string 密码
      * @param wechat_openid 可选 string 微信授权过来
      * @param qq_openid 可选 string qq授权过来
      * @param parent_phone 可选 string 二维码场景值
@@ -49,13 +50,23 @@ class LoginController extends BasePass
              if ($res['code'] != 200) {
                  return response()->json(['code'=>413,'message'=>'验证失败']);
             }*/
+            if(!isset($param['password'])){
+                throw new VerifyException('请输入密码');
+            }
+
+            if(strlen($param['password'])<6){
+                throw new VerifyException('密码不少于6位');
+            }
+
             $user = User::query()->where('phone', $param['phone'])->first();
             if (!$user) {
-                $insert = ['phone' => $param['phone']];
+                $insert = ['phone' => $param['phone'],'password'=>bcrypt($param['password'])];
 
                 if (isset($param['parent_phone'])) {
                     $insert['parent_id'] = User::query()->where('phone', $param['parent_phone'])->value('id');
                 }
+
+
                 \DB::transaction(function () use ($insert, $param) {
 
                     $user = User::create($insert);

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\Client;
 
 /*
@@ -20,7 +21,7 @@ Route::get('article/detail','ArticleController@detail');
 
 Route::post('wechat','WechatController@wechat');
 Route::get('sms','SecretController@code');
-Route::post('smscheck','SecretController@checkcode');
+Route::post('smscheck','SecretController@smscheck');
 
 Route::get('crow/index','CrowController@index');
 Route::get('crow/search','CrowController@search');
@@ -37,7 +38,10 @@ Route::post('login','LoginController@login')->name('login');
 Route::post('refresh','LoginController@refresh');
 Route::get('logout','LoginController@logout');
 
-
+Route::get('testt',function(){
+    dd(Cache::forget('test'));
+   //return Cache::increment('test');
+});
 
 Route::group(['middleware'=>'auth:api'],function (){
 

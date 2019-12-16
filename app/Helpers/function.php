@@ -23,6 +23,11 @@ function bdiv($left_operand, $right_operand, $scale = '4')
     return bcdiv($left_operand, $right_operand, $scale);
 }
 
+function bcomp($left_operand, $right_operand, $scale = '4')
+{
+    return bccomp ($left_operand, $right_operand, $scale);
+}
+
 
 function get_conf()
 {

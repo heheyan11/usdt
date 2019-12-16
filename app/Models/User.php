@@ -51,7 +51,7 @@ class User extends Authenticatable
                 }
             }
             if (!$user->headimgurl) {
-                $user->headimgurl = 'headimg.jpg';
+                $user->headimgurl = 'headimg.png';
             }
             if ($user->name) {
                 $user->name = mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9);
@@ -133,6 +133,10 @@ class User extends Authenticatable
     public function usercrow()
     {
         return $this->hasOne(UserCrow::class);
+    }
+
+    public function orderti(){
+        return $this->hasOne(OrderTi::class);
     }
 
     public function chongs()

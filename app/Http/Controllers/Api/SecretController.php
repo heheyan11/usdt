@@ -36,7 +36,7 @@ class SecretController
         $phone = $request->input('phone');
         $res = app(SmsService::class)->sendSmsCode($phone, '4102536');
         if ($res['code'] != 200) {
-            throw new BusException('短信发送失败',412);
+            throw new BusException('短信发送失败', 412);
         }
         return response()->json(['code' => 200, 'message' => 'ok']);
     }
@@ -62,7 +62,7 @@ class SecretController
         $code = $request->input('code');
         $res = app(SmsService::class)->verifycode($phone, $code);
         if ($res['code'] != 200) {
-            throw new BusException('短信验证失败',413);
+            throw new BusException('短信验证失败', 413);
         } else {
             return response()->json(['code' => 200, 'message' => '短信验证成功']);
         }
@@ -106,7 +106,6 @@ class SecretController
      * @param password 可选 string 用户密码
      * @param phone 必填 string 用户手机
      * @param code 可选 string 手机验证码
-     * @param oldpass 必填 string 旧密码
      * @return {"code":200,"message":'修改密码成功'}
      * @return_param code string 200：修改登录密码成功； 0：修改登录密码失败
      * @remark 登录前：提交phone和code,登陆后提交oldpass
@@ -122,16 +121,13 @@ class SecretController
             }
             $res = app(SmsService::class)->verifycode($param['phone'], $param['code']);
             if ($res['code'] != 200) {
-                throw new BusException('短信验证失败',413);
+                throw new BusException('短信验证失败', 413);
             }
-
         } elseif (isset($param['oldpass'])) {
-
             $user = \Auth::guard('api')->user();
             if (!$user) {
                 throw new InternalException('Unauthenticated', 401);
             }
-
             if (!Hash::check($param['oldpass'], $user->password)) {
                 throw new VerifyException('密码错误');
             }
@@ -151,10 +147,8 @@ class SecretController
      * @description 修改手机号
      * @method post
      * @url secret/changephone
-     * @param password 必填 string 用户密码
      * @param phone 必填 string 用户手机
      * @param code 必填 string 手机验证码
-     * @param oldpass 必填 string 旧密码
      * @return {"code":200,"message":'修改密码成功'}
      * @return_param code string 200：修改登录密码成功； 0：修改登录密码失败
      * @remark 登录前：提交phone和code,登陆后提交oldpass
@@ -165,7 +159,7 @@ class SecretController
         $param = $request->input();
         $res = app(SmsService::class)->verifycode($param['phone'], $param['code']);
         if ($res['code'] != 200) {
-            throw new BusException('短信验证失败',413);
+            throw new BusException('短信验证失败', 413);
         }
         if (User::where('phone', $param['phone'])->exists()) {
             throw new VerifyException('该手机已存在');
@@ -239,8 +233,8 @@ class SecretController
 
         \Auth::guard('api')->user()->update(['paypass' => bcrypt($param['password'])]);
 
-        if(Cache::has('lockpaypass'.$user->id)){
-            Cache::forget('lockpaypass'.$user->id);
+        if (Cache::has('lockpaypass' . $user->id)) {
+            Cache::forget('lockpaypass' . $user->id);
         }
         return response()->json(['code' => 200, 'message' => '修改支付密码成功']);
 

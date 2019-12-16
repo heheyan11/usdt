@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConfigsTable extends Migration
+class CreateOrderTisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
+        Schema::create('order_tis', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('min_money',15,4);
-            $table->decimal('start_day',15,4);
-            $table->decimal('out_rate',15,4);
-            $table->decimal('refund_rate',15,4);
-            $table->decimal('min_ti',15,4);
-
+            $table->integer('user_id');
+            $table->decimal('amount',15,4);
+            $table->decimal('rate',15,4);
+            $table->tinyInteger('status')->default(0);
+            $table->timestamp('created_at');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('order_tis');
     }
 }
