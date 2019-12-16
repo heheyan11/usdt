@@ -24,9 +24,9 @@ class WechatController extends BasePass
      * @method post
      * @url wechat
      * @param code 必选 string 微信临时凭证
-     * @return {"code":200,"openid":"dfdsfewf3f32323232","action":"bindAccount"}
+     * @return {"code":200,"openid":"dfdsfewf3f32323232","cmd":"login"}
      * @return_param openid string 用户openid
-     * @return_param action string bindAccount:执行绑定账号
+     * @return_param cmd string 执行路径
      * @return {"token_type":"Bearer","expires_in":86400,"access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI5ODIxNzJlMDg4ZjJiY2UwN2VlNjk2ZmYyZmNkMTdlYzU5ZDdiNjBiYmFmM2Q3YzZiMDU3MjY0MWYxN2MyZjM4ZWZkZjI5YmNiOTExNOiIyIiwianRpIjoiYjk4MjE3MmUwODhmMmJjZTA3ZWU2OTZmZjJmY2QxN2VjNTlkN2I2MGJiYWYzZDdjNmIwNTcyNjQxZjE3YzJmMzhlZmRmMjliY2I5MTE0MmIiLCJpYXQiOjE1NzUmSrySUTy_WWYcwIYVe9lUXzUF_r0DvZkqX9bnfuQAL-GfCM5MZ8nLLywplOjVvMXxgdGfB2sU2BwaUuCoRrYbyzZ8fzKs9GjN5BZbwLrBw","refresh_token":"def502009bf149f6e5b481ea42d4244ebca8e218fd6ce0810212381327385fab2b1a7238c196fb5e2fbd2225b35addb4e6043574b6f7c603f47848718240ed9876d7f55dc1ffe792bf3cdf67c83fe21e43cfc6f77267b9b6bae953ce7dbc13f910cf1b835073cdc14d13f03f0c62869b5eb87faffed8a03af615a3dcf7f341242629ccc6df1bac17461a7739b2f19fa9fc980a9e352b699d4738b241ebb53fff55465763130155a8fe57a5426d4c40d68efc3bbbfd6767c95f3d16680864409f486caed5f9030edb49174c0db767bf0347"}
      * @remark 1: 没有绑定手机号，请求登录接口 带上并wechat_openid参数绑定 2: 直接返回用户登录的参数
      * @number 4
@@ -47,7 +47,7 @@ class WechatController extends BasePass
             return response()->json([
                 'code' => 200,
                 'wechat_openid' => $data['openid'],
-                'action' => 'bindAccount'
+                'cmd' => route('login')
             ]);
         }
         //没有注册
@@ -55,7 +55,7 @@ class WechatController extends BasePass
             return response()->json([
                 'code' => 200,
                 'wechat_openid' => $data['openid'],
-                'action' => 'bindAccount'
+                'cmd' => route('login')
             ]);
         }
 

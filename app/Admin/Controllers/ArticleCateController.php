@@ -12,6 +12,7 @@ use Encore\Admin\Layout\Row;
 use Encore\Admin\Show;
 use Encore\Admin\Tree;
 use Encore\Admin\Widgets\Box;
+use function foo\func;
 
 class ArticleCateController extends AdminController
 {
@@ -122,8 +123,11 @@ class ArticleCateController extends AdminController
         //  $form->image('thumb', '主图')->removable()->uniqueName();
         $form->text('title', 'Title');
 
+
         return $form;
     }
+
+
 
 
 

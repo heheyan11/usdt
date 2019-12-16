@@ -49,7 +49,7 @@ class CreateAdminTables extends Migration
 
         Schema::create(config('admin.database.menu_table'), function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('parent_id')->default(0);
+            $table->integer('parent_id');
             $table->integer('order')->default(0);
             $table->string('title', 50);
             $table->string('icon', 50);

@@ -19,28 +19,6 @@ class LoginController extends BasePass
     /**
      * showdoc
      * @catalog 登录相关
-     * @title 短信验证码
-     * @description 获取手机短信验证码
-     * @method post
-     * @url sms
-     * @param phone 必填 string 用户手机
-     * @return {"code":200,"message":"ok"}
-     * @remark 无
-     * @number 5
-     */
-    public function code(RegisterRequest $request)
-    {
-        $phone = $request->input('phone');
-        $res = app(SmsService::class)->sendSmsCode($phone, '4102536');
-        if ($res['code'] != 200) {
-            throw new InternalException('获取手机验证码错误' . $res['msg']);
-        }
-        return response()->json(['code'=>200,'message'=>'ok']);
-    }
-
-    /**
-     * showdoc
-     * @catalog 登录相关
      * @title 用户登录
      * @description 用户登录的接口
      * @method post
@@ -50,6 +28,7 @@ class LoginController extends BasePass
      * @param password 可选 string 密码
      * @param wechat_openid 可选 string 微信授权过来
      * @param qq_openid 可选 string qq授权过来
+     * @param parent_phone 可选 string 二维码场景值
      * @return {"token_type":"Bearer","expires_in":86400,"access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI5ODIxNzJlMDg4ZjJiY2UwN2VlNjk2ZmYyZmNkMTdlYzU5ZDdiNjBiYmFmM2Q3YzZiMDU3MjY0MWYxN2MyZjM4ZWZkZjI5YmNiOTExNOiIyIiwianRpIjoiYjk4MjE3MmUwODhmMmJjZTA3ZWU2OTZmZjJmY2QxN2VjNTlkN2I2MGJiYWYzZDdjNmIwNTcyNjQxZjE3YzJmMzhlZmRmMjliY2I5MTE0MmIiLCJpYXQiOjE1NzUmSrySUTy_WWYcwIYVe9lUXzUF_r0DvZkqX9bnfuQAL-GfCM5MZ8nLLywplOjVvMXxgdGfB2sU2BwaUuCoRrYbyzZ8fzKs9GjN5BZbwLrBw","refresh_token":"def502009bf149f6e5b481ea42d4244ebca8e218fd6ce0810212381327385fab2b1a7238c196fb5e2fbd2225b35addb4e6043574b6f7c603f47848718240ed9876d7f55dc1ffe792bf3cdf67c83fe21e43cfc6f77267b9b6bae953ce7dbc13f910cf1b835073cdc14d13f03f0c62869b5eb87faffed8a03af615a3dcf7f341242629ccc6df1bac17461a7739b2f19fa9fc980a9e352b699d4738b241ebb53fff55465763130155a8fe57a5426d4c40d68efc3bbbfd6767c95f3d16680864409f486caed5f9030edb49174c0db767bf0347"}
      * @return_param token_type string 认证方式
      * @return_param expires_in int 过期时间
@@ -58,50 +37,67 @@ class LoginController extends BasePass
      * @remark code和 password 二选一
      * @number 1
      */
-    public function login(RegisterRequest $request){
+    public function login(RegisterRequest $request)
+    {
 
         $param = $request->input();
 
         $pass = null;
-        if(isset($param['code'])){
+        if (isset($param['code'])) {
 
-           /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
-            if ($res['code'] != 200) {
-                return response()->json(['code'=>413,'message'=>'验证失败']);
-           }*/
+            /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
+             if ($res['code'] != 200) {
+                 return response()->json(['code'=>413,'message'=>'验证失败']);
+            }*/
+            $user = User::query()->where('phone', $param['phone'])->first();
+            if (!$user) {
+                $insert = ['phone' => $param['phone']];
 
-            $user = User::query()->where('phone',$param['phone'])->first();
-            if(!$user){
-
-                $user = User::create([
-                    'phone'=>$param['phone'],
-                    'headimgurl'=>'http://aliyunzixunbucket.oss-cn-beijing.aliyuncs.com/webimg/help/8.png'
-                ]);
-
-                event(new Registered($user));
-                //如果绑定微信
-                if(isset($param['wechat_openid'])){
-                    $wechat = Wechat::query()->where('openid',$param['wechat_openid'])->first();
-                    $user->wechat()->associate($wechat);
-                    $user->headimgurl = $wechat->headimgurl;
-                    $user->save();
+                if (isset($param['parent_phone'])) {
+                    $insert['parent_id'] = User::query()->where('phone', $param['parent_phone'])->value('id');
                 }
-                if(isset($param['qq_openid'])){
-                    $qq = Wechat::query()->where('openid',$param['qq_openid'])->first();
-                    $user->wechat()->associate($qq);
-                    $user->headimgurl = $wechat->headimgurl;
-                    $user->save();
-                }
+                \DB::transaction(function () use ($insert, $param) {
+
+                    $user = User::create($insert);
+
+                    $guzzle = new \GuzzleHttp\Client();
+                    $url = 'http://39.107.156.221/api/GenerateAddress';
+
+                    $response = $guzzle->get($url);
+                    $rs = json_decode($response->getBody()->getContents(), true);
+                    if ($rs['errcode'] != 0) {
+                        throw new InternalException('注册地址错误');
+                    }
+                    $data = $rs['data']['eth'];
+                    $data['kid'] = $data['id'];
+                    $user->wallet()->create($data);
+
+                    //event(new Registered($user));
+                    //如果绑定微信
+                    if (isset($param['wechat_openid'])) {
+                        $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
+                        $user->wechat()->associate($wechat);
+                        $user->headimgurl = $wechat->headimgurl;
+                        $user->save();
+                    }
+                    //如果绑定QQ
+                    if (isset($param['qq_openid'])) {
+                        $qq = Wechat::query()->where('openid', $param['qq_openid'])->first();
+                        $user->wechat()->associate($qq);
+                        $user->headimgurl = $wechat->headimgurl;
+                        $user->save();
+                    }
+
+                });
             }
             $pass = config('app.private_pass');
-        }elseif(isset($param['password'])){
+        } elseif (isset($param['password'])) {
             $pass = $param['password'];
         }
-        if(!$pass){
-            return response()->json(['code'=>414,'message'=>'缺少参数code或password参数']);
+        if (!$pass) {
+            return response()->json(['code' => 414, 'message' => '缺少参数code或password参数']);
         }
-
-        return $this->blogin($param['phone'],$pass);
+        return $this->blogin($param['phone'], $pass);
     }
 
     /**
@@ -121,10 +117,10 @@ class LoginController extends BasePass
      * @number 2
      */
 
-    public function refresh(Request $request){
+    public function refresh(Request $request)
+    {
 
-        $param = $request->validate(['refresh_token'=>'required']);
-
+        $param = $request->validate(['refresh_token' => 'required']);
         return $this->bFresh($param['refresh_token']);
     }
 
@@ -141,11 +137,12 @@ class LoginController extends BasePass
      * @number 3
      */
 
-    public function logout(Request $request){
-        if (\Auth::guard('api')->check()){
+    public function logout(Request $request)
+    {
+        if (\Auth::guard('api')->check()) {
             \Auth::guard('api')->user()->token()->revoke();
         }
-        return response()->json(['code'=>200,'message'=>'ok']);
+        return response()->json(['code' => 200, 'message' => 'ok']);
     }
 
 }

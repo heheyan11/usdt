@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\TiRequest;
 use App\Models\ChongOrder;
 use App\Models\User;
 use App\Models\UserWallet;
 use Illuminate\Http\Request;
 
-
-
 class WalletController
 {
     private $privateKey= ['merchantkey'=>'dhasdiuahwfiuagbvkasbdiasbkcgafbasdas'];
 
-    protected function validate(){
-        \Validator::make(
-            \request()->input(),
-            ['amount'=>'required|min:1'],
-            ['required'=>':attribute 为必填项'],
-            ['amount'=>'金额']
-        )->validate();
+
+    public function index(){
+        $data = UserWallet::query()->where('user_id',\Auth::guard('api')->user()->id)
+            ->select('amount','address')->first();
+
+        dd($data);
     }
 
-    public function refound(){
 
-        $this->validate();
-        $amount = \request()->input('amount');
 
-        $wallet = User::query()->where('id',12)->first()->wallet;
+
+
+    //用户提现
+    public function withDraw(TiRequest $request){
+
+        $param = $request->input();
+
         $param = [
           'symbol'=>'usdt',
           'merchantId'=>'123456',
-          'orderAmount'=>$amount,
+          'orderAmount'=>$param['amount'],
           'signType'=>'MD5',
-          'address'=>$wallet->address
+          'address'=>$param['address']
         ];
         $param = $this->getSign($param);
         $guzzle = new \GuzzleHttp\Client();
@@ -41,8 +42,10 @@ class WalletController
 
         $response = $guzzle->post($url,$param);
         $rs = json_decode($response->getBody()->getContents(),true);
-        dd($rs);die;
 
+        if($rs['errcode']==0){
+            //退款成功
+        }
     }
 
     /**
@@ -59,7 +62,7 @@ class WalletController
 
         $param = request()->input();
         if(!$this->checkSign($param)){
-            return '错误';
+            return 'error';
         }
         $wallet = UserWallet::query()->where('address',$param['address_to'])->first();
         if(!$wallet){
@@ -67,19 +70,21 @@ class WalletController
         }
 
         \DB::transaction(function () use ($wallet,$param){
-
             $wallet->amount = badd($param['amount'] , $wallet->amount);
             $wallet->save();
-
             $order = new ChongOrder($param);
             $order->user()->associate($wallet->user_id);
             $order->save();
         });
-        return response()->json(['code'=>200,'message'=>'ok']);
 
+        return response()->json(['code'=>200,'message'=>'ok']);
     }
 
     private function checkSign($param){
+        if(!isset($param['sign'])){
+            return false;
+        }
+
         $sign = $param['sign'];
         unset($param['sign']);
         $param = $this->getSign($param);
@@ -87,14 +92,23 @@ class WalletController
     }
 
     private function getSign($param){
-        $str = '';
+
         $param = array_merge($param,$this->privateKey);
         ksort($param);
-        foreach ($param as $key=>$value){
-            $str .= (trim($key).'='.trim($value).'&');
-        }
-
-        $param['sign'] = md5(substr($str,0,-1));
+        $str = http_build_query($param);
+        $param['sign'] = md5($str);
         return $param;
     }
+
+
+
+
+    /*  protected function validate(){
+          \Validator::make(
+              \request()->input(),
+              ['amount'=>'required|min:1'],
+              ['required'=>':attribute 为必填项'],
+              ['amount'=>'金额']
+          )->validate();
+      }*/
 }

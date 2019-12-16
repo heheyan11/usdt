@@ -80,15 +80,15 @@ class ArticleController extends AdminController
         $show->cate('分类')->as(function ($query) {
             return $query->title;
         });
-        $show->field('title','标题');
+        $show->field('title', '标题');
         $show->thumb('封面图片')->image();
         $show->imgs('配图')->image();
-        $show->field('content','内容')->setEscape(false);
-        $show->field('clicks','浏览量');
+        $show->field('content', '内容')->setEscape(false);
+        $show->field('clicks', '浏览量');
         $show->field('zan', '点赞数');
         $show->field('share', '分享数');
         $show->field('created_at', '创建时间');
-        $show->field('updated_at','修改时间');
+        $show->field('updated_at', '修改时间');
 
         return $show;
     }
@@ -103,23 +103,25 @@ class ArticleController extends AdminController
         $form = new Form(new Article);
         $res = ArticleCate::selectOptions(null, null);
 
-        $form->select('article_cate_id', '分类')->options($res)->required();
+        $form->select('article_cate_id', '分类')->options($res)->required()->default(array_keys($res)[1]);
         $form->text('title', '标题')->required();
         $form->multipleImage('imgs', '配图')->removable()->uniqueName();
         $form->editor('content', '内容')->required();
-        $form->saving(function (Form $form) {
-            if(!empty($form->model()->imgs))$form->model()->thumb = $form->model()->imgs[0];
-            $form->model()->short_content = $this->real_trim($form->model()->content);
+        $form->saved(function (Form $form) {
 
+            if (!$form->model()->thumb) $form->model()->thumb = $form->model()->imgs[0];
+            if (!$form->model()->short_content) $form->model()->short_content = $this->real_trim($form->content);
+            $form->model()->save();
         });
 
         return $form;
     }
 
-    function real_trim($str,$lenth = 50){
+    function real_trim($str, $lenth = 50)
+    {
         $str = htmlspecialchars_decode($str);
-        $str = str_replace(['&nbsp;','&ldquo',"\r\n","\r\n\t"],'',$str);
+        $str = str_replace(['&nbsp;', '&ldquo', "\r\n", "\r\n\t"], '', $str);
         $str = strip_tags($str);
-        return mb_substr($str, 0, $lenth,"utf-8");
+        return mb_substr($str, 0, $lenth, "utf-8") . '...';
     }
 }

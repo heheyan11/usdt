@@ -50,9 +50,9 @@ class ConfController extends AdminController
 
         $form->number('min_money', '最小筹款额度')->required();
         $form->number('min_ti','最小提现额度')->required();
-        $form->number('start_day','默认运行时间(天)')->required();
         $form->number('out_rate','撤仓手续费%')->required();
         $form->number('refund_rate','提现手续费%')->required();
+        $form->number('force_amount','基础升级额度(累计购买计划)')->required();
 
 
         return $form;

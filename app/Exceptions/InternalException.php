@@ -9,13 +9,18 @@ class InternalException extends Exception
 {
 
 
-    public function __construct(string $message = "系统错误",int $code = 500)
+    protected $message;
+
+    public function __construct(string $message = "系统错误")
     {
-        parent::__construct($message, $code);
+        $this->message = $message;
+        parent::__construct($message, 500);
 
     }
+
     public function render(Request $request)
     {
-        return response()->json(['message' => $this->message], $this->code);
+
+        return response()->json(['message' => $this->message], 500);
     }
 }

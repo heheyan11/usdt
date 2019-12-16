@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'phone' => ['required', 'regex:/^1[3456789]\d{9}$/'],
-            'password' => ['min:6|alpha_num'],
+            'password' => ['min:6','alpha_num'],
             'code' => ['numeric'],
         ];
     }
@@ -35,7 +35,7 @@ class RegisterRequest extends FormRequest
         return [
             'phone' => '手机号',
             'password' => '密码',
-            'code' => '验证码'
+            'code' => '验证码',
         ];
     }
 

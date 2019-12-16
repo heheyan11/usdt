@@ -15,9 +15,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-         Registered::class=>[
-             AddWallet::class
-         ]
+//         Registered::class=>[
+//             AddWallet::class
+//         ]
     ];
 
     /**

@@ -26,7 +26,7 @@ $factory->define(\App\Models\Wechat::class, function (Faker $faker) {
         'country'=>$faker->unique()->country,
         'province'=>$faker->unique()->citySuffix,
         'city'=>$faker->unique()->city,
-        'language'=>$faker->unique()->languageCode,
+       // 'language'=>$faker->unique()->languageCode,
         'headimgurl'=>$image
     ];
 });

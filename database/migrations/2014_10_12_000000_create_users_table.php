@@ -19,8 +19,17 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('headimgurl');
             $table->string('password')->nullable()->unique();
+            $table->string('paypass')->nullable();
+            $table->tinyInteger('is_verify')->default(\App\Models\User::CARD_NO);
             $table->string('wechat_id')->nullable();
             $table->string('qq_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->default(0);
+            $table->index('parent_id');
+            $table->boolean('is_directory')->default(0);
+            $table->unsignedInteger('level')->default(0);
+            $table->string('path')->default('-');
+            $table->tinyInteger('check_level')->default(0);
+            $table->tinyInteger('share_level')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

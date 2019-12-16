@@ -15,7 +15,7 @@ class NoticeController extends AdminController
      *
      * @var string
      */
-    protected $title = '通知';
+    protected $title = '通知公告';
 
     /**
      * Make a grid builder.
@@ -26,13 +26,13 @@ class NoticeController extends AdminController
     {
         $grid = new Grid(new Notice);
 
-        $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
+      /*  $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
 
             $create->text('content', '内容');
-        });
+        });*/
 
         $grid->column('id','Id');
-        $grid->column('content', '内容');
+        $grid->column('title','标题');
         $grid->column('created_at', '创建时间');
         $grid->column('updated_at','修改时间');
 
@@ -50,7 +50,8 @@ class NoticeController extends AdminController
         $show = new Show(Notice::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('content', '内容');
+        $show->field('title', '标题');
+        $show->field('content', '内容')->setEscape(false);
         $show->field('created_at', '创建时间');
         $show->field('updated_at','修改时间');
 
@@ -65,7 +66,8 @@ class NoticeController extends AdminController
     protected function form()
     {
         $form = new Form(new Notice);
-        $form->textarea('content', '内容')->required();
+        $form->text('title')->required();
+        $form->editor('content', '内容')->required();
         return $form;
     }
 }

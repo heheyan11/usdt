@@ -10,7 +10,15 @@ class Article extends Model
     protected $casts = [
         'imgs'   => 'json',
     ];
+    protected $fillable = ['title','thumb','imgs','short_content','content'];
+    protected $hidden = ['updated_at'];
+
     public function cate(){
-        return $this->belongsTo(ArticleCate::class,'article_cate_id','id');
+        return $this->belongsTo(ArticleCate::class);
     }
+
+    public function parise(){
+        return $this->hasMany(ArticleParise::class);
+    }
+
 }

@@ -17,10 +17,6 @@ class CreateArticleCatesTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('article_cates')->onDelete('cascade');
-            $table->boolean('is_directory')->default(0);
-            $table->unsignedInteger('level');
-            $table->string('path');
             $table->integer('order')->nullable();
             $table->timestamps();
         });

@@ -16,17 +16,26 @@ class CreateCrowdfundingsTable extends Migration
         Schema::create('crowdfundings', function (Blueprint $table) {
             $table->increments('id');
             $table->char('code',5);
+            $table->string('title')->nullbale();
             $table->unsignedTinyInteger('base_rate');
             $table->unsignedTinyInteger('one_rate');
             $table->unsignedTinyInteger('two_rate');
             $table->unsignedTinyInteger('lead_rate');
-            $table->decimal('target_amount', 10, 4);
-            $table->decimal('total_amount', 10, 4);
+            $table->unsignedMediumInteger('run');
+            $table->unsignedDecimal('target_amount', 15, 4);
+            $table->unsignedDecimal('total_amount', 15, 4)->default(0);
+            $table->unsignedDecimal('income',15,4)->default(0);
             $table->unsignedSmallInteger('user_count')->default(0);
             $table->string('url')->nullable();
-            $table->dateTime('start_at');
-            $table->dateTime('end_at');
-            $table->string('status');
+            $table->text('content')->nullable();
+            $table->integer('start_at')->nullable();
+            $table->integer('end_at')->nullable();
+            $table->tinyInteger('is_cancel')->default(\App\Models\Crowdfunding::CANCEL_YES);
+            $table->string('allow')->nullable();
+            $table->string('noallow')->nullabel();
+            $table->string('status')->default(\App\Models\Crowdfunding::STATUS_FUNDING);
+            $table->string('run_status')->default(\App\Models\Crowdfunding::RUN_STOP);
+            $table->timestamp('created_at', 0)->nullable();
         });
     }
 

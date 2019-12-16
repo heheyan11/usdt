@@ -15,10 +15,9 @@ class CreateUserWalletsTable extends Migration
     {
         Schema::create('user_wallets', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->index('user_id');
-            $table->decimal('amount',10,4)->default(0.0000);
-            $table->string('address');
+            $table->unsignedInteger('user_id')->index('user_id');
+            $table->unsignedDecimal('amount',15,4)->default(0.0000);
+            $table->string('address')->unique('address');
             $table->string('privatekey');
             $table->string('kid');
             $table->string('mnemonic');

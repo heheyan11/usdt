@@ -15,12 +15,12 @@ class CreateChongOrdersTable extends Migration
     {
         Schema::create('chong_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->index('user_id');
-            $table->char('symbol',5);
-            $table->decimal('amount',10,4);
-            $table->string('hash');
+            $table->integer('user_id')->index('user_id');
+            $table->char('symbol',5)->nullable();
+            $table->unsignedDecimal('amount',15,4);
+            $table->string('hash')->nullable();
             $table->timestamp('created_at', 0)->nullable();
+            $table->timestamp('paid_at',0)->nullable();
         });
     }
 

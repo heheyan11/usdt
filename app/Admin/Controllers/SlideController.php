@@ -36,7 +36,7 @@ class SlideController extends AdminController
         });
         $grid->column('thumb', '图片')->image('',100,80);
         $grid->column('url','链接')->display(function ($value){
-            return "<a href='$value' target='_blank'>点击跳转</a>";
+            if($value) return "<a href='$value' target='_blank'>点击跳转</a>";
         });
         $grid->column('created_at', '创建时间');
         $grid->column('updated_at','修改时间');

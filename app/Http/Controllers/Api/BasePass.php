@@ -73,7 +73,6 @@ class BasePass
                 curl_setopt($ci, CURLOPT_POST, true);
                 if (!empty($postfields)) {
                     curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
-                    $this->postdata = $postfields;
                 }
                 break;
         }

@@ -23,8 +23,11 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'phone' => $phone,
-        'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$QY9rcJj50arVpSbUDRl5pe0Cq.tW.7QfPWZPyitnGmNW7NPFq9taq', // secret
-        'remember_token' => str_random(10),
+        'headimgurl'=>'http://img14.360buyimg.com/mobilecms/s250x250_jfs/t1/36474/28/2429/517543/5cb9743aE168ee756/c70039f29f10f6b7.jpg',
+       // 'email' => $faker->unique()->safeEmail,
+        'password' => bcrypt('secret'), // secret
+       // 'remember_token' => str_random(10),
+        'level'=>0,
+        'path'=>'-'
     ];
 });
