@@ -21,7 +21,7 @@ class UploadsController extends AdminController
 
                         $newFileName = $storage->put('image',$value);
 
-                        $prefix = config('filesystems.disks.'.$disk.'.url');
+                        $prefix = 'http://'.config('filesystems.disks.'.$disk.'.domains.default');
 
                         $return = ['errno' => 0, 'data' => [$prefix.DIRECTORY_SEPARATOR.$newFileName]];
 

@@ -64,6 +64,7 @@ return [
         ],
 
         'qiniu' => [
+
             'driver' => 'qiniu',
             'domains' => [
                 'default' => env('QINIU_HOME_URL'), //你的七牛域名
