@@ -16,10 +16,10 @@ class CreateConfigsTable extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('min_money',15,4);
-            $table->decimal('start_day',15,4);
             $table->decimal('out_rate',15,4);
             $table->decimal('refund_rate',15,4);
             $table->decimal('min_ti',15,4);
+            $table->decimal('force_amount',15,4);
 
         });
     }

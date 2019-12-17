@@ -58,3 +58,14 @@ function str_xing($str)
 
     return mb_substr($str, 0, 1, 'utf-8') . $xing . $str2;
 }
+
+function order_number(){
+    static $ORDERSN=array();                                        //静态变量
+    $ors=date('ymd').substr(time(),-5).substr(microtime(),2,5);     //生成16位数字基本号
+    if (isset($ORDERSN[$ors])) {                                    //判断是否有基本订单号
+        $ORDERSN[$ors]++;                                           //如果存在,将值自增1
+    }else{
+        $ORDERSN[$ors]=1;
+    }
+    return $ors.str_pad($ORDERSN[$ors],2,'0',STR_PAD_LEFT);     //链接字符串
+}

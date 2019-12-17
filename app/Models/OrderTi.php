@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class OrderTi extends Model
 {
     CONST UPDATED_AT = null;
+    protected $fillable = ['amount', 'rate', 'status','shouxu'];
 
-    protected $fillable = ['amount','rate','status'];
+    CONST STATUS_WAIT = 0;
+    CONST STATUS_YES = 1;
+    CONST STATUS_NO = 2;
 
-    public function user(){
+    public static $stateMap = [
+        self::STATUS_WAIT => '等待审核',
+        self::STATUS_YES => '已审核',
+        self::STATUS_NO => '审核不通过'
+    ];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

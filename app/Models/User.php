@@ -62,14 +62,19 @@ class User extends Authenticatable
 
     public function checkPassLimit($pass, $type = 'pass')
     {
-        $num = 3 - Cache::increment('lockpaypass' . $this->id);
-        if ($num <= 0) {
+
+        $num = Cache::get('lockpaypass' . $this->id);
+        if ($num && (3 - $num) <= 0) {
             throw new VerifyException('账户异常！请您修改支付密码');
         }
         $myPass = $type == 'pass' ? $this->password : $this->paypass;
-        $status = Hash::check($myPass, $pass);
+
+        $status = Hash::check($pass, $myPass);
         if (!$status) {
+            Cache::increment('lockpaypass' . $this->id);
             throw new VerifyException('支付密码错误,您还有' . $num . '次机会');
+        } elseif ($num) {
+            Cache::forget('lockpaypass' . $this->id);
         }
     }
 
@@ -135,7 +140,8 @@ class User extends Authenticatable
         return $this->hasOne(UserCrow::class);
     }
 
-    public function orderti(){
+    public function orderti()
+    {
         return $this->hasOne(OrderTi::class);
     }
 

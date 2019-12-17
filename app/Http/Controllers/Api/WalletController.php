@@ -14,7 +14,6 @@ class WalletController
 {
     private $privateKey = ['merchantkey' => 'dhasdiuahwfiuagbvkasbdiasbkcgafbasdas'];
 
-
     /**
      * showdoc
      * @catalog 我的钱包
@@ -46,42 +45,28 @@ class WalletController
 
         $param = $request->input();
         $user = \Auth::guard('api')->user();
+        $user->checkPassLimit($param['password'], 'pay');
 
         \DB::transaction(function () use ($user, $param) {
             $wallet = UserWallet::query()->where('user_id', $user->id)
                 ->select('amount', 'address', 'id')->lockForUpdate()->first();
-            if (bcomp($param['amount'], $wallet->amount) != 1) {
-                throw new VerifyException('您钱包的数量不足');
-            }
+
             $config = get_conf();
             if ($param['amount'] < $config['min_ti']) {
                 throw new VerifyException('最低提币额度为' . $config['min_ti']);
             }
             $param['rate'] = $config['refund_rate'];
-            $wallet->amount = bsub($wallet->amount, $param['amount']);
+            $shouxu = bmul($param['amount'], bdiv($config['refund_rate'], 100));
+
+            if (bcomp($wallet->amount, badd($param['amount'], $shouxu)) != 1) {
+                throw new VerifyException('您钱包的数量不足');
+            }
+            $param['shouxu'] = $shouxu;
+            $wallet->amount = bsub($wallet->amount, badd($param['amount'], $shouxu));
             $wallet->save();
             $user->orderti()->create($param);
         });
-        return response()->json(['code'=>200,'message'=>'提交成功，请等待审核']);
-
-        //TODO:写到后台
-        $param = [
-            'symbol' => 'usdt',
-            'merchantId' => '123456',
-            'orderAmount' => $param['amount'],
-            'signType' => 'MD5',
-            'address' => $param['address']
-        ];
-        $param = $this->getSign($param);
-        $guzzle = new \GuzzleHttp\Client();
-        $url = 'http://39.107.156.221/api/CallWithdrawal';
-
-        $response = $guzzle->post($url, $param);
-        $rs = json_decode($response->getBody()->getContents(), true);
-
-        if ($rs['errcode'] == 0) {
-            //退款成功
-        }
+        return response()->json(['code' => 200, 'message' => '提交成功，请等待审核']);
     }
 
     /**
@@ -96,7 +81,6 @@ class WalletController
      */
     public function recharge()
     {
-
         $param = request()->input();
         if (!$this->checkSign($param)) {
             return 'error';
@@ -105,7 +89,6 @@ class WalletController
         if (!$wallet) {
             return response()->json(['code' => 412, 'message' => '该钱包地址不存在']);
         }
-
         \DB::transaction(function () use ($wallet, $param) {
             $wallet->amount = badd($param['amount'], $wallet->amount);
             $wallet->save();
@@ -122,7 +105,6 @@ class WalletController
         if (!isset($param['sign'])) {
             return false;
         }
-
         $sign = $param['sign'];
         unset($param['sign']);
         $param = $this->getSign($param);
@@ -131,14 +113,12 @@ class WalletController
 
     private function getSign($param)
     {
-
         $param = array_merge($param, $this->privateKey);
         ksort($param);
         $str = http_build_query($param);
         $param['sign'] = md5($str);
         return $param;
     }
-
 
     /*  protected function validate(){
           \Validator::make(

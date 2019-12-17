@@ -26,6 +26,7 @@ class NoticeController extends AdminController
     {
         $grid = new Grid(new Notice);
 
+        $grid->model()->orderByDesc('id');
       /*  $grid->quickCreate(function (Grid\Tools\QuickCreate $create) {
 
             $create->text('content', '内容');

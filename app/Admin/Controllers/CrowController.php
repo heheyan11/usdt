@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Crow\Run;
 use App\Admin\Actions\Crow\Send;
-use App\Models\CrowdFunding;
+use App\Models\Crowdfunding;
 use Carbon\Carbon;
 use Encore\Admin\Grid\Displayers\Actions;
 use Encore\Admin\Controllers\AdminController;
@@ -31,8 +31,9 @@ class CrowController extends AdminController
     protected function grid()
     {
 
-        $grid = new Grid(new CrowdFunding);
+        $grid = new Grid(new Crowdfunding);
 
+        $grid->model()->orderByDesc('id');
         $grid->filter(function ($filter) {
             $filter->expand();
             $filter->column(1 / 2, function ($filter) {
@@ -87,7 +88,7 @@ class CrowController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(CrowdFunding::findOrFail($id));
+        $show = new Show(Crowdfunding::findOrFail($id));
 
         $show->field('code', '编号');
         $show->field('base_rate', '基础%');
@@ -111,7 +112,7 @@ class CrowController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new CrowdFunding);
+        $form = new Form(new Crowdfunding);
 
         $form->number('base_rate', '基础%')->default(config('dao.base'))->required();
         $form->number('one_rate', '一代%')->default(config('dao.one'))->required();
@@ -120,7 +121,7 @@ class CrowController extends AdminController
         $form->number('run', '运行周期(天)')->default(config('dao.run'))->required();
         $form->decimal('manage_rate', '管理费%')->default(config('dao.manage'))->required();
 
-        $form->decimal('target_amount', '目标额度')->default(0)->required();
+        $form->decimal('target_amount', '目标额度')->default(100)->required()->rules('min:1');
         $form->switch('is_cancel', '是否可以撤销')->default(1);
 
         $form->text('title', '标题');

@@ -16,7 +16,7 @@ class CreateLogIncomesTable extends Migration
         Schema::create('log_incomes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('crowdfunding_id');
-            $table->integer('crowdfunding_code');
+            $table->integer('user_id');
             $table->unsignedDecimal('amount', 15, 4);
             $table->unsignedDecimal('income', 15, 4);
             $table->string('title');

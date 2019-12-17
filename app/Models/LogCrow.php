@@ -15,4 +15,13 @@ class LogCrow extends Model
     {
         return date('Y-m-d',$this->attributes['created_at']);
     }
+
+    public function crow(){
+        return $this->belongsTo(Crowdfunding::class,'crowdfunding_id','id');
+    }
+
+    public function logforms(){
+        return $this->hasMany(LogForm::class);
+    }
+
 }

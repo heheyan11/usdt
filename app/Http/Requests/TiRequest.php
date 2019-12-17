@@ -13,7 +13,7 @@ class TiRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -31,12 +31,8 @@ class TiRequest extends FormRequest
             ],
             'password' => ['min:6','alpha_num','required'],
             'address'=>[
-                'required',
-                function($attr,$value,$fail){
-                    if (!(preg_match('/^(1|3)[a-zA-Z\d]{24,33}$/', $value) && preg_match('/^[^0OlI]{25,34}$/', $value))) {
-                        $fail('地址不合法');
-                    }
-                }
+                'required'
+
             ]
         ];
     }
@@ -45,10 +41,11 @@ class TiRequest extends FormRequest
         return [
             'amount.required' => '请输操作数量',
             'amount.regex'=>'提币数量格式不正确',
+            'password.required'=>'请填写支付密码',
             'password.min' => '支付密码至少6位',
             'password.alpha_num' => '支付密码格式有误',
             'password.password' => '请输入支付密码',
-            'address'=>'',
+            'address.required'=>'请填写提币地址',
         ];
     }
 }

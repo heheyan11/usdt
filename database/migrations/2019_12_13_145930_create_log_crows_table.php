@@ -16,6 +16,7 @@ class CreateLogCrowsTable extends Migration
         Schema::create('log_crows', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('crowdfunding_id');
+            $table->integer('crowdfunding_code');
             $table->decimal('amount',15, 4);
             $table->decimal('sub',15, 4);
             $table->decimal('send',15, 4);

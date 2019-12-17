@@ -29,5 +29,13 @@ Route::group([
     $router->get('users-tree','UserController@tree');
     $router->get('users-selftree','UserController@selftree')->name('self.tree');
 
+    $router->get('orderti','OrderController@ti');
+    $router->get('orderchong','OrderController@chong');
+    $router->get('orderincome','OrderController@income');
+    $router->get('orderlevel','OrderController@level');
+
+    $router->get('form-crow','LogController@crow');
+
+
 
 });

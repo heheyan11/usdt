@@ -63,15 +63,10 @@ class LoginController extends BasePass
                 if (isset($param['parent_phone'])) {
                     $insert['parent_id'] = User::query()->where('phone', $param['parent_phone'])->value('id');
                 }
-
-
                 \DB::transaction(function () use ($insert, $param) {
-
                     $user = User::create($insert);
-
                     $guzzle = new \GuzzleHttp\Client();
                     $url = 'http://39.107.156.221/api/GenerateAddress';
-
                     $response = $guzzle->get($url);
                     $rs = json_decode($response->getBody()->getContents(), true);
                     if ($rs['errcode'] != 0) {
@@ -96,7 +91,6 @@ class LoginController extends BasePass
                         $user->headimgurl = $wechat->headimgurl;
                         $user->save();
                     }
-
                 });
             }
             $pass = config('app.private_pass');
@@ -125,10 +119,8 @@ class LoginController extends BasePass
      * @remark 无
      * @number 2
      */
-
     public function refresh(Request $request)
     {
-
         $param = $request->validate(['refresh_token' => 'required']);
         return $this->bFresh($param['refresh_token']);
     }

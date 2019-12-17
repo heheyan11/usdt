@@ -34,10 +34,10 @@ class SecretController
     public function code(RegisterRequest $request)
     {
         $phone = $request->input('phone');
-        $res = app(SmsService::class)->sendSmsCode($phone, '4102536');
-        if ($res['code'] != 200) {
+       // $res = app(SmsService::class)->sendSmsCode($phone, '4102536');
+      /*  if ($res['code'] != 200) {
             throw new BusException('短信发送失败', 412);
-        }
+        }*/
         return response()->json(['code' => 200, 'message' => 'ok']);
     }
 
@@ -60,12 +60,12 @@ class SecretController
     {
         $phone = $request->input('phone');
         $code = $request->input('code');
-        $res = app(SmsService::class)->verifycode($phone, $code);
+        /*$res = app(SmsService::class)->verifycode($phone, $code);
         if ($res['code'] != 200) {
             throw new BusException('短信验证失败', 413);
-        } else {
+        } else {*/
             return response()->json(['code' => 200, 'message' => '短信验证成功']);
-        }
+        //}
     }
 
     /**
