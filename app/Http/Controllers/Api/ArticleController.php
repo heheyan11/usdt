@@ -68,16 +68,16 @@ class ArticleController
         if (!$art) {
             throw new BusException('查无内容');
         }
-        $uid = \Auth::guard('api')->user()->id;
+        $user = \Auth::guard('api')->user();
 
-        $parse = ArticleParise::query()->where('article_id', $art->id)->where('user_id', $uid)->first();
+        $parse = ArticleParise::query()->where('article_id', $art->id)->where('user_id', $user->id)->first();
         if ($parse) {
             if ($parse->status != $param['status']) {
                 $parse->update(['status' => $param['status']]);
                 $param['status'] == ArticleParise::STATUS_YES ? $art->increment('zan') : $art->decrement('zan');
             }
         } else {
-            $art->parise()->create(['user_id' => $uid, 'status' => ArticleParise::STATUS_YES]);
+            $art->parise()->create(['user_id' => $user->id, 'status' => ArticleParise::STATUS_YES]);
             $art->increment('zan');
         }
 

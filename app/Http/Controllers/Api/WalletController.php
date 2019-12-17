@@ -58,7 +58,7 @@ class WalletController
             $param['rate'] = $config['refund_rate'];
             $shouxu = bmul($param['amount'], bdiv($config['refund_rate'], 100));
 
-            if (bcomp($wallet->amount, badd($param['amount'], $shouxu)) != 1) {
+            if (bcomp($wallet->amount, badd($param['amount'], $shouxu)) == -1) {
                 throw new VerifyException('您钱包的数量不足');
             }
             $param['shouxu'] = $shouxu;

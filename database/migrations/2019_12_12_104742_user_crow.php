@@ -14,10 +14,12 @@ class UserCrow extends Migration
     public function up()
     {
         Schema::create('user_crows',function (Blueprint $table){
+            $table->increments('id');
             $table->integer('user_id');
             $table->integer('crowdfunding_id');
             $table->unique(['user_id','crowdfunding_id']);
             $table->unsignedDecimal('amount',15,4);
+            $table->tinyInteger('status')->default(\App\Models\UserCrow::STATUS_RUN);
             $table->timestamp('created_at');
         });
     }

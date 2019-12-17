@@ -169,7 +169,7 @@ class User extends Authenticatable
     public function getCardInfoAttribute($key)
     {
         if ($this->attributes['is_verify']) {
-            return Cache::remember($this->cacheKey() . ':card', 15, function () {
+            return Cache::remember($this->cacheKey() . ':card', 60, function () {
                 return [
                     str_xing($this->card->name),
                     str_xing($this->card->code)

@@ -93,6 +93,8 @@ class UserController extends AdminController
     {
         $data = $tree->getUserTree();
 
+      //  $data = collect([['id'=>0,'name'=>'根','children'=>$data->toArray()]]);
+
         return $content
             ->header('用户树状图')
             // body 方法可以接受 Laravel 的视图作为参数

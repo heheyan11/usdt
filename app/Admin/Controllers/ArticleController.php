@@ -62,7 +62,6 @@ class ArticleController extends AdminController
         $grid->column('zan', __('点赞量'));
         $grid->column('share', __('分享量'));
         $grid->column('created_at', '创建时间');
-
         return $grid;
     }
 
@@ -77,9 +76,7 @@ class ArticleController extends AdminController
         $show = new Show(Article::findOrFail($id));
 
         $show->field('id', 'Id');
-        $show->cate('分类')->as(function ($query) {
-            return $query->title;
-        });
+
         $show->field('title', '标题');
         $show->thumb('封面图片')->image();
         $show->imgs('配图')->image();
@@ -109,7 +106,7 @@ class ArticleController extends AdminController
         $form->editor('content', '内容')->required();
         $form->saved(function (Form $form) {
 
-            if (!$form->model()->thumb) $form->model()->thumb = $form->model()->imgs[0];
+            if (isset($form->model()->imgs[0])) $form->model()->thumb = $form->model()->imgs[0];
             if (!$form->model()->short_content) $form->model()->short_content = $this->real_trim($form->content);
             $form->model()->save();
         });

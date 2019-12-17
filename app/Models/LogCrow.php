@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LogCrow extends Model
 {
     CONST UPDATED_AT = null;
-    protected $fillable = ['amount','crowdfunding_code','sub','send'];
+    protected $guarded = [];
     protected $dateFormat = 'U';
     protected $appends=['date'];
 

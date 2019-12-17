@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\LogForm;
+use App\Models\UserCrow;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -48,6 +49,7 @@ class SendHong implements ShouldQueue
         $lead_rate = bdiv($this->plan->lead_rate, 100);
         $record = [];
         foreach ($plans as $value) {
+
             //我拿到的总钱数
             $baseMoney = bmul($this->amount, bdiv($value->amount, $this->plan->total_amount));
 

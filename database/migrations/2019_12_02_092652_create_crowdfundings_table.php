@@ -21,17 +21,18 @@ class CreateCrowdfundingsTable extends Migration
             $table->unsignedTinyInteger('one_rate');
             $table->unsignedTinyInteger('two_rate');
             $table->unsignedTinyInteger('lead_rate');
+            $table->unsignedDecimal('out_rate',10,4)->default(0);
             $table->decimal('manage_rate',5,2);
             $table->unsignedMediumInteger('run');
             $table->unsignedDecimal('target_amount', 15, 4);
             $table->unsignedDecimal('total_amount', 15, 4)->default(0);
             $table->unsignedDecimal('income',15,4)->default(0);
+
             $table->unsignedSmallInteger('user_count')->default(0);
             $table->string('url')->nullable();
             $table->text('content')->nullable();
             $table->integer('start_at')->nullable();
             $table->integer('end_at')->nullable();
-            $table->tinyInteger('is_cancel')->default(\App\Models\Crowdfunding::CANCEL_YES);
             $table->string('allow')->nullable();
             $table->string('noallow')->nullabel();
             $table->string('status')->default(\App\Models\Crowdfunding::STATUS_FUNDING);

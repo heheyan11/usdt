@@ -33,6 +33,7 @@ Route::group([
     $router->get('orderchong','OrderController@chong');
     $router->get('orderincome','OrderController@income');
     $router->get('orderlevel','OrderController@level');
+    $router->get('ordercancel','OrderController@cancel');
 
     $router->get('form-crow','LogController@crow');
 

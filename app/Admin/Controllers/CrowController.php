@@ -120,16 +120,17 @@ class CrowController extends AdminController
         $form->number('lead_rate', '贡献值%')->default(config('dao.lead'))->required();
         $form->number('run', '运行周期(天)')->default(config('dao.run'))->required();
         $form->decimal('manage_rate', '管理费%')->default(config('dao.manage'))->required();
+        $form->decimal('out_rate', '撤仓手续费%')->default(config('dao.out_rate'))->required();
+        $form->decimal('out_amount', '最小撤仓数量')->default(config('dao.out_amount'))->required();
 
         $form->decimal('target_amount', '目标额度')->default(100)->required()->rules('min:1');
-        $form->switch('is_cancel', '是否可以撤销')->default(1);
 
         $form->text('title', '标题');
         $form->text('allow', '允许撤销提示');
         $form->text('noallow', '禁止撤销提示');
         $form->url('url', '视频地址')->rules('url');
         $form->hidden('status')->default(Crowdfunding::STATUS_FUNDING);
-        $form->textarea('content', '详情');
+        $form->editor('content', '详情');
 
         $form->saving(function (Form $form) {
             if ($form->base_rate + $form->one_rate + $form->two_rate + $form->lead_rate != 100) {

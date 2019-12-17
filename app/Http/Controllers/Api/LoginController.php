@@ -94,7 +94,10 @@ class LoginController extends BasePass
                 });
             }
             $pass = config('app.private_pass');
-        } elseif (isset($param['password'])) {
+        } else{
+            if(!isset($param['password'])) {
+                throw new VerifyException('请输入密码');
+            }
             $pass = $param['password'];
         }
         if (!$pass) {

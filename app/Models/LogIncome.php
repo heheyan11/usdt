@@ -8,7 +8,12 @@ class LogIncome extends Model
 {
     CONST UPDATED_AT = null;
     protected $dateFormat = 'U';
-    protected $fillable = ['amount','income','title','crowdfunding_id'];
+    protected $guarded = [];
+
+    public function getCreatedAtAttribute($key)
+    {
+        return date('Y-m-d',$key);
+    }
 
     public function user(){
         return $this->belongsTo(User::class);

@@ -8,9 +8,11 @@ use App\Http\Requests\CardRequest;
 use App\Http\Requests\InfoRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Crowdfunding;
+use App\Models\LogIncome;
+use App\Models\UserCrow;
 use App\Services\CardService;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Cache;
 class UserController
 {
     /**
@@ -31,7 +33,6 @@ class UserController
         $user = \Auth::guard('api')->user();
         return response()->json(['code' => 200, 'data' => new UserResource($user), 'message' => 'ok']);
     }
-
     /**
      * showdoc
      * @catalog 我的
@@ -150,6 +151,7 @@ class UserController
         })->select('id', 'code', 'title', 'target_amount', 'total_amount', 'status', 'income', 'run_status', 'created_at', 'start_at', 'end_at')->get();
 
         foreach ($crow as $value) {
+         //   dd($value->toArray());die;
             $value->diff_day = 0;
             //可以众筹
             if ($value->status == Crowdfunding::STATUS_FUNDING || $value->status == Crowdfunding::STATUS_WAIT) {
@@ -157,8 +159,6 @@ class UserController
                 $funding[] = $value;
             } //量化中
             elseif ($value->run_status == Crowdfunding::RUN_START && $value->status == Crowdfunding::STATUS_END) {
-
-                $value->created_at = Carbon::parse($value->created_at)->toDateString();
                 $value->start_at = date('Y-m-d', $value->start_at);
                 if ($value->end_at > time()) {
                     $cDate = Carbon::parse(date('Y-m-d', $value->end_at));
@@ -174,5 +174,59 @@ class UserController
         return response()->json(['code' => 200, 'data' => ['can' => $funding, 'run' => $run, 'stop' => $stop], 'message' => 'ok']);
     }
 
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 我的收益
+     * @description 我的收益
+     * @method get
+     * @url user/income
+     * @return {"code":200,"message":"ok","data":{"my":"8000.0000","friend":"2000.0000","income":"6576.3040"}}
+     * @return_param my string 我申请的
+     * @return_param friend string 好友申请的
+     * @return_param income string 总收益
+     * @remark 无
+     * @number 1
+     */
+    public function income()
+    {
+        $user = \Auth::guard('api')->user();
+
+        $data = Cache::remember('user_income' . $user->id, 15, function () use ($user) {
+            $my = UserCrow::query()->where('user_id', $user->id)->where('status', 1)->sum('amount');
+            $friend = UserCrow::query()->whereIn('user_id', $user->children()->pluck('id'))->where('status', 1)->sum('amount');
+            $income = LogIncome::query()->where('user_id', $user->id)->sum('income');
+            return ['my' => $my, 'friend' => $friend, 'income' => $income];
+        });
+        return response()->json(['code' => 200, 'message' => 'ok', 'data' => $data]);
+    }
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 我的收益
+     * @description 我的收益记录
+     * @method get
+     * @url user/incomelog
+     * @return {"current_page":1,"data":[{"title":"\u8d21\u732e\u5956 \u7531\uff1a1337****424\u63d0\u4f9b","amount":"2000.0000","income":"15.9040","created_at":"2019-12-17"},{"title":"\u76f4\u63a8\u597d\u53cb1337****424\u63d0\u4f9b","amount":"2000.0000","income":"198.8000","created_at":"2019-12-17"},{"title":"\u4f17\u7b792\u53f7","amount":"8000.0000","income":"6361.6000","created_at":"2019-12-17"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/incomelog","per_page":30,"prev_page_url":null,"to":3,"total":3}
+     * @return_param current_page string 当前页
+     * @return_param current_page string 分页数据
+     * @return_param last_page string 最后一页
+     * @return_param per_page string 每页显示数
+     * @return_param title string 消息
+     * @return_param amount string 申请额度
+     * @return_param income string 获得收益
+     * @return_param created_at string 时间
+     * @remark 无
+     * @number 1
+     */
+    public function incomelog()
+    {
+        $param = request()->input();
+        $user = \Auth::guard('api')->user();
+        $page_size = $param['page_size'] ?? 30;
+        $res = LogIncome::where('user_id', $user->id)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
+        return response()->json($res);
+    }
 
 }

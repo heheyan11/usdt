@@ -16,9 +16,6 @@ class Crowdfunding extends Model
     //运行状态
     CONST RUN_START = 'run';
     CONST RUN_STOP = 'stop';
-    //撤销状态
-    CONST CANCEL_YES = 1;
-    CONST CANCEL_NO = 0;
 
     public static $statusMap = [
         self::STATUS_FUNDING => '众筹中',
@@ -31,17 +28,13 @@ class Crowdfunding extends Model
         self::RUN_STOP => '未量化',
     ];
 
-    public static $cancelMap = [
-        self::CANCEL_NO => '禁止撤销',
-        self::CANCEL_YES => '允许撤销'
-    ];
+
 
     protected $fillable = ['code', 'url','total_amount','target_amount', 'user_count', 'status', 'start_at','end_at',
-    'title','allow','noallow','is_cancel'
+    'title','allow','noallow'
     ];
 
    // protected $dates = ['start_at','end_at'];
-
 
     protected static function boot()
     {
@@ -68,7 +61,7 @@ class Crowdfunding extends Model
         return $this->hasMany(UserCrow::class);
     }
 
-    public function ordercancel(){
-        return $this->hasOne(OrderCancel::class);
+    public function ordercancels(){
+        return $this->hasMany(OrderCancel::class);
     }
 }

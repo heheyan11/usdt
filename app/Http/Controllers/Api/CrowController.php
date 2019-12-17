@@ -27,6 +27,7 @@ class CrowController
      * @title 列表
      * @description 财富计划列表
      * @method get
+     * @param type string 必选 can可以申请run已允许stop已停止
      * @url crow/index
      * @return {"code":200,"data":{"can":[{"id":1,"code":"40621","title":"\u4f17\u7b792\u53f7","target_amount":"10000.0000","total_amount":"0.0000","income":"0.0000","status":"funding","run_status":"stop","created_at":"2019-12-12 08:11:30","start_at":null,"end_at":null},{"id":2,"code":"10425","title":"\u4f17\u7b7932\u53f7","target_amount":"10000.0000","total_amount":"0.0000","income":"0.0000","status":"funding","run_status":"stop","created_at":"2019-12-12 08:24:50","start_at":null,"end_at":null}],"run":[],"stop":[]},"message":"ok"}
      * @return_param can string 可申请
@@ -51,15 +52,15 @@ class CrowController
     {
         $funding = $run = $stop = [];
 
-        $crow = Crowdfunding::all(['id', 'code', 'title', 'target_amount','income', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at']);
+        $crow = Crowdfunding::all(['id', 'code', 'title', 'target_amount', 'income', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at']);
 
         //$user = \Auth::guard('api')->user();
 
         foreach ($crow as $value) {
-           /* $value->isBuy = 0;
-            if ($user && $value->crows()->where('user_id', $user->id)->exists()) {
-                $value->isBuy = 1;
-            }*/
+            /* $value->isBuy = 0;
+             if ($user && $value->crows()->where('user_id', $user->id)->exists()) {
+                 $value->isBuy = 1;
+             }*/
             $value->diff_day = 0;
             //可以众筹
             if ($value->status == Crowdfunding::STATUS_FUNDING || $value->status == Crowdfunding::STATUS_WAIT) {
@@ -92,15 +93,16 @@ class CrowController
      * @description 详情
      * @method get
      * @url crow/detail
-     * @return {"code":200,"data":{"title":"\u4f17\u7b792\u53f7","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"create_at":"2019-12-14","code":"40621","content":null,"income":"10000.0000"},"message":"ok"}
+     * @return {"code":200,"data":{"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"code":"40621","content":null,"income":"50000.0000","status":"end","run_status":"run","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":356,"is_buy":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
      * @return_param title string 标题
+     * @return_param allow string 允许撤销弹窗提示
+     * @return_param noallow string 不允许撤销弹窗提示
      * @return_param target_amount string 仓位额度
      * @return_param total_amount string 当前申请额度
      * @return_param loading string 加载比例2位小数
      * @return_param code string 订单
      * @return_param content string 详情
      * @return_param income string 累计收益
-     * @return_param is_cancel string 1可以撤回0不能撤回
      * @return_param start_at string 量化启动时间
      * @return_param end_at string 量化结束时间
      * @return_param created_at string 发布时间
@@ -108,6 +110,10 @@ class CrowController
      * @return_param run_status string 量化状态run量化中stop量化结束
      * @return_param diff_day int 倒计时天
      * @return_param is_buy int 1已购买0未购买
+     * @return_param out int 如果允许撤销并且已购买，此处为撤销信息
+     * @return_param out.amount int 申请额度
+     * @return_param out.rate int 撤销手续费
+     * @return_param out.allow_amount int 可撤销最大数量
      * @remark 无
      * @number 2
      */
@@ -266,26 +272,37 @@ class CrowController
         if ($crow->run_status == Crowdfunding::RUN_STOP) {
             throw new VerifyException('该计划已停止');
         }
-        if (!$crow->is_cancel) {
-            throw new VerifyException('该计划不允许撤销');
-        }
+
         $plan = $crow->crows()->where('user_id', $user->id)->first();
 
-        $exits = $crow->whereHas('ordercancel', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
+        $exits = $crow->whereHas('ordercancels', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('status', OrderCancel::STATUS_WAIT);
         })->exists();
+
         if ($exits) {
             throw new VerifyException('该申请已存在，请等待审核');
         }
         if (!$plan) {
             throw new VerifyException('您没有购买该计划');
         }
-        if ($param['amount'] > $plan->amount) {
-            throw new VerifyException('提取数量超过原有数量');
+
+        if ($param['amount'] < $crow->out_amount) {
+            throw new VerifyException('最小撤销额度' . $crow->out_amount);
         }
-        $rate = Config::query()->value('out_rate');
+
+        $shouxu = bmul($param['amount'], bdiv($crow->out_rate, 100));
+        $cancelMoney = badd($param['amount'], $shouxu);
+        if (bcomp($plan->amount, $cancelMoney) == -1) {
+            throw new VerifyException('超出最大撤销数量');
+        }
         try {
-            $crow->ordercancel()->create(['user_id' => $user->id, 'amount' => $param['amount'], 'rate' => $rate]);
+            $plan->update(['amount' => bsub($plan->amount, $cancelMoney)]);
+            $crow->ordercancels()->create([
+                'user_id' => $user->id,
+                'amount' => $param['amount'],
+                'rate' => $crow->out_rate,
+                'shouxu' => $shouxu
+            ]);
             return response()->json(['code' => 200, 'message' => '申请撤销成功']);
         } catch (\Exception $exception) {
             throw new VerifyException('操作失败');

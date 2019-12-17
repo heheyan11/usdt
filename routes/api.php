@@ -60,6 +60,9 @@ Route::group(['middleware'=>'auth:api'],function (){
     Route::post('user/changeinfo','UserController@changeInfo');
     Route::get('user/crows','UserController@crows');
 
+    Route::get('user/income','UserController@income');
+    Route::get('user/incomelog','UserController@incomelog');
+
     Route::post('article/parise','ArticleController@parise');
     Route::post('upload','UploadContoller@uploadImg');
 });

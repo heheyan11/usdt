@@ -19,6 +19,7 @@ class CreateOrderCancelsTable extends Migration
             $table->integer('crowdfunding_id');
             $table->decimal('amount',15,4);
             $table->decimal('rate',10,4);
+            $table->decimal('shouxu',10,4);
             $table->timestamps();
         });
     }
