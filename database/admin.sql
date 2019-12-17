@@ -21,7 +21,7 @@
 
 LOCK TABLES `admin_menu` WRITE;
 /*!40000 ALTER TABLE `admin_menu` DISABLE KEYS */;
-INSERT INTO `admin_menu` VALUES (1,0,1,'面板','fa-bar-chart','/',NULL,NULL,NULL),(2,0,4,'管理员','fa-user-secret',NULL,NULL,NULL,'2019-12-03 07:30:19'),(3,2,5,'用户','fa-users','auth/users',NULL,NULL,'2019-12-03 04:11:30'),(4,2,6,'角色','fa-user','auth/roles',NULL,NULL,'2019-12-03 04:11:30'),(5,2,7,'权限','fa-ban','auth/permissions',NULL,NULL,'2019-12-03 04:11:30'),(6,2,8,'菜单','fa-bars','auth/menu',NULL,NULL,'2019-12-03 04:11:30'),(7,2,9,'操作日志','fa-history','auth/logs',NULL,NULL,'2019-12-03 04:11:30'),(8,0,10,'内容管理','fa-delicious',NULL,NULL,'2019-10-21 02:32:29','2019-12-03 04:11:30'),(9,8,12,'新闻分类','fa-info','article-cates',NULL,'2019-10-21 02:33:44','2019-12-09 07:40:00'),(10,8,13,'新闻列表','fa-info-circle','articles',NULL,'2019-10-21 11:30:44','2019-12-09 07:40:00'),(12,8,14,'幻灯列表','fa-sliders','slides',NULL,'2019-10-21 16:12:41','2019-12-09 07:40:00'),(13,0,3,'理财计划','fa-btc','crowd-fundings',NULL,'2019-12-02 09:55:14','2019-12-03 07:29:48'),(14,0,2,'项目配置','fa-connectdevelop','configs/1/edit',NULL,'2019-12-03 04:11:20','2019-12-03 04:16:36'),(15,8,11,'通知公告','fa-leanpub','notices',NULL,'2019-12-03 07:24:26','2019-12-09 07:40:00'),(16,18,16,'用户列表','fa-user','users',NULL,'2019-12-09 07:39:34','2019-12-10 00:55:54'),(17,18,17,'用户树状图','fa-bars','users-tree',NULL,'2019-12-09 08:53:02','2019-12-10 03:14:19'),(18,0,15,'用户管理','fa-users',NULL,NULL,'2019-12-10 00:55:29','2019-12-10 00:55:54');
+INSERT INTO `admin_menu` VALUES (1,0,1,'面板','fa-bar-chart','/',NULL,NULL,NULL),(2,0,2,'管理员','fa-user-secret',NULL,NULL,NULL,'2019-12-17 11:56:08'),(3,2,3,'用户','fa-users','auth/users',NULL,NULL,'2019-12-17 11:56:08'),(4,2,4,'角色','fa-user','auth/roles',NULL,NULL,'2019-12-17 11:56:08'),(5,2,5,'权限','fa-ban','auth/permissions',NULL,NULL,'2019-12-17 11:56:08'),(6,2,6,'菜单','fa-bars','auth/menu',NULL,NULL,'2019-12-17 11:56:08'),(7,2,7,'操作日志','fa-history','auth/logs',NULL,NULL,'2019-12-17 11:56:08'),(8,0,11,'内容管理','fa-delicious',NULL,NULL,'2019-10-21 02:32:29','2019-12-17 11:56:08'),(9,8,13,'新闻分类','fa-info','article-cates',NULL,'2019-10-21 02:33:44','2019-12-17 11:56:08'),(10,8,14,'新闻列表','fa-info-circle','articles',NULL,'2019-10-21 11:30:44','2019-12-17 11:56:08'),(12,8,15,'幻灯列表','fa-sliders','slides',NULL,'2019-10-21 16:12:41','2019-12-17 11:56:08'),(13,0,9,'理财计划','fa-btc','crowd-fundings',NULL,'2019-12-02 09:55:14','2019-12-17 11:56:08'),(14,0,8,'项目配置','fa-connectdevelop','configs/1/edit',NULL,'2019-12-03 04:11:20','2019-12-17 11:56:08'),(15,8,12,'通知公告','fa-leanpub','notices',NULL,'2019-12-03 07:24:26','2019-12-17 11:56:08'),(16,18,20,'用户列表','fa-user','users',NULL,'2019-12-09 07:39:34','2019-12-17 11:56:08'),(17,18,21,'用户树状图','fa-bars','users-tree',NULL,'2019-12-09 08:53:02','2019-12-17 11:56:08'),(18,0,19,'用户管理','fa-users',NULL,NULL,'2019-12-10 00:55:29','2019-12-17 11:56:08'),(19,0,16,'用户记录','fa-camera-retro',NULL,NULL,'2019-12-17 08:55:18','2019-12-17 11:56:08'),(20,19,17,'提币记录','fa-bars','orderti',NULL,'2019-12-17 08:59:24','2019-12-17 11:56:08'),(21,19,18,'充币记录','fa-bars','orderchong',NULL,'2019-12-17 11:53:28','2019-12-17 11:56:08'),(22,0,10,'统计','fa-diamond','form-crow',NULL,'2019-12-17 11:55:00','2019-12-17 12:41:56'),(24,19,0,'收入记录','fa-bars','orderincome',NULL,'2019-12-17 13:59:15','2019-12-17 13:59:31'),(25,19,0,'等级变化记录','fa-bars','orderlevel',NULL,'2019-12-17 14:06:31','2019-12-17 14:08:24');
 /*!40000 ALTER TABLE `admin_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `configs` WRITE;
 /*!40000 ALTER TABLE `configs` DISABLE KEYS */;
-INSERT INTO `configs` VALUES (1,100,5,2,100,1000);
+INSERT INTO `configs` VALUES (1,100.0000,5.0000,2.0000,100.0000,1000.0000);
 /*!40000 ALTER TABLE `configs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -113,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-16  4:46:59
+-- Dump completed on 2019-12-17  6:33:09
