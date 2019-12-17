@@ -22,6 +22,7 @@ class CreateCrowdfundingsTable extends Migration
             $table->unsignedTinyInteger('two_rate');
             $table->unsignedTinyInteger('lead_rate');
             $table->unsignedDecimal('out_rate',10,4)->default(0);
+            $table->unsignedDecimal('out_amount',10,4)->default(0);
             $table->decimal('manage_rate',5,2);
             $table->unsignedMediumInteger('run');
             $table->unsignedDecimal('target_amount', 15, 4);
