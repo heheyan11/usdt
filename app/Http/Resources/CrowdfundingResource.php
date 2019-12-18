@@ -41,6 +41,8 @@ class CrowdfundingResource extends Resource
         }
 
         return [
+            'code'=>$this->code,
+            'crow_id'=>$this->id,
             'title' => $this->title,
             'allow' => $this->allow,
             'noallow' => $this->noallow,

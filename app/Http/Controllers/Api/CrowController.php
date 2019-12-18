@@ -86,6 +86,8 @@ class CrowController
      * @method get
      * @url crow/detail
      * @return {"code":200,"data":{"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"code":"40621","content":null,"income":"50000.0000","status":"end","run_status":"run","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":356,"is_buy":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
+     * @return_param crow_id string 计划id
+     * @return_param code string 计划编号
      * @return_param title string 标题
      * @return_param allow string 允许撤销弹窗提示
      * @return_param noallow string 不允许撤销弹窗提示

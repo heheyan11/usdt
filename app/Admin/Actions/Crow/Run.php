@@ -20,6 +20,8 @@ class Run extends RowAction
             $model->run_status = Crowdfunding::RUN_START;
             $model->save();
 
+            dispatch(new PlanRun($model));
+
             return $this->response()->success('运行成功...')->refresh();
         }
         return $this->response()->error('该计划不能运行');
