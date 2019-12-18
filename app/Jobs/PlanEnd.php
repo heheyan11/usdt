@@ -26,7 +26,6 @@ class PlanEnd implements ShouldQueue
     {
         $this->plan = $model;
     }
-
     /**
      * Execute the job.
      *
@@ -39,10 +38,11 @@ class PlanEnd implements ShouldQueue
             $this->plan->crows->each(function ($value) use ($title) {
                 if ($value->amount > 0) {
                     UserWallet::query()->where('user_id', $value->user_id)->increment('amount', $value->amount);
-                    Message::create(['user_id' => $value->user_id, 'title' => $title, 'content' => '量化已结束']);
+                    Message::create(['user_id' => $value->user_id, 'title' => $title, 'content' => '量化已结束,余额'.$value->amount.'已到账']);
                 }
             });
             $this->plan->run_status = Crowdfunding::RUN_STOP;
+            $this->plan->status = Crowdfunding::STATUS_END;
             $this->plan->save();
         });
     }

@@ -195,10 +195,21 @@ class UserController
     public function income()
     {
         $user = \Auth::guard('api')->user();
+        Cache::forget('user_income' . $user->id);
 
         $data = Cache::remember('user_income' . $user->id, 15, function () use ($user) {
-            $my = UserCrow::query()->where('user_id', $user->id)->sum('amount');
-            $friend = UserCrow::query()->whereIn('user_id', $user->children()->pluck('id'))->sum('amount');
+
+            //我长在参与量化
+            $my = UserCrow::whereHas('crow',function($query){
+                $query->where('run_status','<>',Crowdfunding::RUN_STOP)->where('status','<>',Crowdfunding::STATUS_END);
+            })->where('user_id', $user->id)->sum('amount');
+
+            //好友正在参与量化
+            $friend = UserCrow::whereHas('crow',function($query){
+                $query->where('run_status','<>',Crowdfunding::RUN_STOP)->where('status','<>',Crowdfunding::STATUS_END);
+            })->whereIn('user_id', $user->children()->pluck('id'))->sum('amount');
+
+            //我的总收益
             $income = LogIncome::query()->where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->sum('income');
             return ['my' => $my, 'friend' => $friend, 'income' => $income];
         });

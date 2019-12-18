@@ -4,6 +4,7 @@
 namespace App\Admin\Actions\Cancel;
 
 
+use App\Models\Crowdfunding;
 use App\Models\OrderCancel;
 use App\Models\UserCrow;
 use App\Models\UserWallet;
@@ -19,8 +20,10 @@ class Yes extends RowAction
         if ($model->status != OrderCancel::STATUS_WAIT) {
             return $this->response()->error('不能重复审核.');
         }
-        \DB::transaction(function () use ($model){
-            UserWallet::query()->where('user_id', $model->user_id)->increment('amount',$model->amount);
+        \DB::transaction(function () use ($model) {
+
+            $model->crow->update(['status' => Crowdfunding::STATUS_FUNDING]);
+            UserWallet::query()->where('user_id', $model->user_id)->increment('amount', $model->amount);
             $model->status = OrderCancel::STATUS_YES;
             $model->save();
         });

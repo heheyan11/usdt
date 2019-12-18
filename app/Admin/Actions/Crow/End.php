@@ -15,15 +15,13 @@ class End extends RowAction
 
     public function handle(Model $model)
     {
-        if ($model->status == Crowdfunding::RUN_START) {
 
-
+        if ($model->run_status == Crowdfunding::RUN_START) {
 
             dispatch(new PlanEnd($model));
-
             return $this->response()->success('释放中...')->refresh();
         }
-
+        return $this->response()->error('该计划不满足释放条件');
     }
     public function dialog()
     {

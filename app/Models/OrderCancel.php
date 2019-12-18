@@ -21,4 +21,8 @@ class OrderCancel extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function crow(){
+        return $this->belongsTo(Crowdfunding::class,'crowdfunding_id','id');
+    }
 }
