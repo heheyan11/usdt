@@ -1,9 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Api;
-
-
 use App\Exceptions\BusException;
 use App\Exceptions\InternalException;
 use App\Exceptions\VerifyException;
@@ -18,7 +15,6 @@ use App\Models\UserCard;
 use App\Models\UserCrow;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-
 class CrowController
 {
     /**
@@ -27,7 +23,6 @@ class CrowController
      * @title 列表
      * @description 财富计划列表
      * @method get
-     * @param type string 必选 can可以申请run已允许stop已停止
      * @url crow/index
      * @return {"code":200,"data":{"can":[{"id":1,"code":"40621","title":"\u4f17\u7b792\u53f7","target_amount":"10000.0000","total_amount":"0.0000","income":"0.0000","status":"funding","run_status":"stop","created_at":"2019-12-12 08:11:30","start_at":null,"end_at":null},{"id":2,"code":"10425","title":"\u4f17\u7b7932\u53f7","target_amount":"10000.0000","total_amount":"0.0000","income":"0.0000","status":"funding","run_status":"stop","created_at":"2019-12-12 08:24:50","start_at":null,"end_at":null}],"run":[],"stop":[]},"message":"ok"}
      * @return_param can string 可申请
@@ -40,7 +35,7 @@ class CrowController
      * @return_param start_at string 量化启动时间
      * @return_param end_at int 量化结束时间
      * @return_param created_at string 发布时间
-     * @return_param status string 众筹状态:funding众筹中end众筹结束
+     * @return_param status string 众筹状态:funding众筹中end众筹结束wait等待量化
      * @return_param run_status string 量化状态run量化中stop量化结束
      * @return_param diff_day int 倒计时天
      * @return_param income string 收益
@@ -55,7 +50,6 @@ class CrowController
         $crow = Crowdfunding::all(['id', 'code', 'title', 'target_amount', 'income', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at']);
 
         //$user = \Auth::guard('api')->user();
-
         foreach ($crow as $value) {
             /* $value->isBuy = 0;
              if ($user && $value->crows()->where('user_id', $user->id)->exists()) {
@@ -68,7 +62,6 @@ class CrowController
                 $funding[] = $value;
             } //量化中
             elseif ($value->run_status == Crowdfunding::RUN_START && $value->status == Crowdfunding::STATUS_END) {
-
                 $value->created_at = Carbon::parse($value->created_at)->toDateString();
                 $value->start_at = date('Y-m-d', $value->start_at);
 
@@ -85,7 +78,6 @@ class CrowController
         }
         return response()->json(['code' => 200, 'data' => ['can' => $funding, 'run' => $run, 'stop' => $stop], 'message' => 'ok']);
     }
-
     /**
      * showdoc
      * @catalog 财富计划
@@ -117,7 +109,6 @@ class CrowController
      * @remark 无
      * @number 2
      */
-
     public function detail()
     {
         $id = request()->input('crow_id');
@@ -126,7 +117,6 @@ class CrowController
         $crow = Crowdfunding::find($id);
         return response()->json(['code' => 200, 'data' => new CrowdfundingResource($crow), 'message' => 'ok']);
     }
-
     /**
      * showdoc
      * @catalog 财富计划
@@ -175,7 +165,6 @@ class CrowController
         $res = Crowdfunding::query()->where('title', 'like', "%$title%")->select('title', 'id')->get();
         return response()->json(['code' => 200, 'data' => $res, 'message' => 'ok']);
     }
-
     /**
      * showdoc
      * @catalog 财富计划
@@ -203,7 +192,6 @@ class CrowController
         }
         $user->checkPassLimit($param['password'], 'pay');
         $user->load('wallet');
-
         if ($user->wallet->amount < $param['amount']) {
             throw new VerifyException('您的余额不足，请充值');
         }
@@ -213,7 +201,6 @@ class CrowController
             if (!$crow) {
                 throw new VerifyException('计划失效');
             }
-
             $mycrow = UserCrow::query()->where('user_id', $user->id)->where('crowdfunding_id', $crow->id)->first();
 
             if ($crow->status != Crowdfunding::STATUS_FUNDING) {
@@ -308,5 +295,4 @@ class CrowController
             throw new VerifyException('操作失败');
         }
     }
-
 }
