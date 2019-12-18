@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Exceptions\BusException;
 use App\Exceptions\InternalException;
 use App\Exceptions\VerifyException;
@@ -15,6 +16,7 @@ use App\Models\UserCard;
 use App\Models\UserCrow;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+
 class CrowController
 {
     /**
@@ -78,6 +80,7 @@ class CrowController
         }
         return response()->json(['code' => 200, 'data' => ['can' => $funding, 'run' => $run, 'stop' => $stop], 'message' => 'ok']);
     }
+
     /**
      * showdoc
      * @catalog 财富计划
@@ -85,7 +88,8 @@ class CrowController
      * @description 详情
      * @method get
      * @url crow/detail
-     * @return {"code":200,"data":{"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"code":"40621","content":null,"income":"50000.0000","status":"end","run_status":"run","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":356,"is_buy":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
+     * @param crow_id string 必填 id
+     * @return {"code":200,"data":{ "code": "55563","crow_id": 1,"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"manage_rate":"0.5","code":"40621","content":null,"income":"50000.0000","status":"end","run_status":"run","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":356,"is_buy":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
      * @return_param crow_id string 计划id
      * @return_param code string 计划编号
      * @return_param title string 标题
@@ -94,6 +98,7 @@ class CrowController
      * @return_param target_amount string 仓位额度
      * @return_param total_amount string 当前申请额度
      * @return_param loading string 加载比例2位小数
+     * @return_param manage_rate string 管理费百分比
      * @return_param code string 订单
      * @return_param content string 详情
      * @return_param income string 累计收益
@@ -119,6 +124,7 @@ class CrowController
         $crow = Crowdfunding::find($id);
         return response()->json(['code' => 200, 'data' => new CrowdfundingResource($crow), 'message' => 'ok']);
     }
+
     /**
      * showdoc
      * @catalog 财富计划
@@ -167,6 +173,7 @@ class CrowController
         $res = Crowdfunding::query()->where('title', 'like', "%$title%")->select('title', 'id')->get();
         return response()->json(['code' => 200, 'data' => $res, 'message' => 'ok']);
     }
+
     /**
      * showdoc
      * @catalog 财富计划
@@ -253,7 +260,7 @@ class CrowController
     {
         $param = request()->input();
         $user = \Auth::guard('api')->user();
-      //  $user->checkPassLimit($param['password'], 'pay');
+        //  $user->checkPassLimit($param['password'], 'pay');
         $crow = Crowdfunding::query()->where('id', $param['crow_id'])->first();
         if (!$crow) {
             throw new VerifyException('计划失效');

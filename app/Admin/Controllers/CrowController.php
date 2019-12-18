@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Crow\End;
 use App\Admin\Actions\Crow\Run;
 use App\Admin\Actions\Crow\Send;
 use App\Models\Crowdfunding;
@@ -54,6 +55,7 @@ class CrowController extends AdminController
             $actions->disableDelete();
             $actions->add(new Run);
             $actions->add(new Send);
+            $actions->add(new End);
         });
         $grid->column('code', '编号');
         $grid->column('title', '标题');

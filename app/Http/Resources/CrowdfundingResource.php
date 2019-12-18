@@ -24,7 +24,7 @@ class CrowdfundingResource extends Resource
         $isBuy = 0;
         $out = '';
 
-        if($this->status != Crowdfunding::STATUS_END || $this->run_status != Crowdfunding::RUN_STOP) {
+        if ($this->status != Crowdfunding::STATUS_END || $this->run_status != Crowdfunding::RUN_STOP) {
             $user = \Auth::guard('api')->user();
             if ($user) {
                 $usercrow = $this->crows()->where('user_id', $user->id)->first();
@@ -41,11 +41,12 @@ class CrowdfundingResource extends Resource
         }
 
         return [
-            'code'=>$this->code,
-            'crow_id'=>$this->id,
+            'code' => $this->code,
+            'crow_id' => $this->id,
             'title' => $this->title,
             'allow' => $this->allow,
             'noallow' => $this->noallow,
+            'manage_rate' => $this->manage_rate,
             'target_amount' => $this->target_amount,
             'total_amount' => $this->total_amount,
             'loading' => $this->percent,

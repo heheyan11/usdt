@@ -29,7 +29,6 @@ class No extends RowAction
         $model->status = OrderCancel::STATUS_NO;
         $model->save();
 
-
         return $this->response()->success('禁止撤销成功.')->refresh();
     }
 
