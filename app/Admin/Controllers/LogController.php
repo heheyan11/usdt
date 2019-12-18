@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Active;
 use App\Models\LogCrow;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
@@ -17,9 +18,9 @@ class LogController extends Controller
         $grid = new Grid(new LogCrow());
 
         $grid->model()->orderByDesc('id');
-        $grid->filter(function ($filter) {
+      /*  $grid->filter(function ($filter) {
             $filter->expand();
-        });
+        });*/
         $grid->disableCreateButton();
         $grid->disableExport();
         $grid->disableRowSelector();
@@ -47,9 +48,32 @@ class LogController extends Controller
 
         $grid->column('crowdfunding_code','计划编号');
         return $content
-            ->title('平台收支')
-            ->description('平台收支')
+            ->title('平台统计')
+            ->description('平台统计')
             ->body($grid);
     }
 
+    public function active(Content $content){
+
+        $grid = new Grid(new Active());
+
+        $grid->model()->orderByDesc('id');
+       /* $grid->filter(function ($filter) {
+            $filter->expand();
+        });*/
+        $grid->disableCreateButton();
+        $grid->disableExport();
+        $grid->disableRowSelector();
+        $grid->disableActions();
+        $grid->column('id', 'id');
+        $grid->column('type','类型')->display(function ($value){
+            return Active::$typeMap[$value];
+        });
+        $grid->column('content','内容');
+        $grid->column('created_at', '创建时间');
+        return $content
+            ->title('用户反馈')
+            ->description('用户反馈')
+            ->body($grid);
+    }
 }

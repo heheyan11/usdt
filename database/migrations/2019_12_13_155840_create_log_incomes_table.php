@@ -19,6 +19,7 @@ class CreateLogIncomesTable extends Migration
             $table->integer('user_id');
             $table->unsignedDecimal('amount', 15, 4);
             $table->unsignedDecimal('income', 15, 4);
+            $table->tinyInteger('is_team');
             $table->string('title');
             $table->integer('created_at');
         });

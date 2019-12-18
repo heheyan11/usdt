@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\VerifyException;
+use App\Models\Active;
 use App\Models\Article;
 use App\Models\Crowdfunding;
 use App\Models\Notice;
@@ -35,9 +37,9 @@ class IndexController
 
         $crow = Crowdfunding::query()
             ->select('id', 'code', 'title', 'target_amount', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
-            ->where('status',Crowdfunding::STATUS_FUNDING)
-            ->orWhere('run_status',Crowdfunding::RUN_START)
-            ->get()->map(function($value){
+            ->where('status', Crowdfunding::STATUS_FUNDING)
+            ->orWhere('run_status', Crowdfunding::RUN_START)
+            ->get()->map(function ($value) {
 
                 $value->loading = $value->percent;
 
@@ -51,31 +53,32 @@ class IndexController
                     }
                 }
                 return $value;
-        });
+            });
 
         $data = [
             'slide' => $slide,
-            'overall'=>$this->overall(),
+            'overall' => $this->overall(),
             'notice' => $notice,
             'crow' => $crow
         ];
         return response()->json(['code' => 200, 'data' => $data, 'message' => 'ok']);
     }
 
-    private function overall(){
+    private function overall()
+    {
 
-        return Cache::remember('hangqing',15,function (){
+        return Cache::remember('hangqing', 15, function () {
             $eth = 'https://dncapi.bqiapp.com/api/coin/web-coinrank?page=1&type=-1&pagesize=100&webp=1';
             $guzzle = new \GuzzleHttp\Client();
             $response = $guzzle->get($eth);
             $eth = json_decode($response->getBody()->getContents(), true);
             $arr = [];
-            foreach ($eth['data'] as $value){
-                if(in_array($value['name'],['BTC','ETH','BCH'])){
-                    $arr[$value['name']]=[
-                        'current_price'=>$value['current_price'],
-                        'current_price_usd'=>$value['current_price_usd'],
-                        'change_percent'=>$value['change_percent']
+            foreach ($eth['data'] as $value) {
+                if (in_array($value['name'], ['BTC', 'ETH', 'BCH'])) {
+                    $arr[$value['name']] = [
+                        'current_price' => $value['current_price'],
+                        'current_price_usd' => $value['current_price_usd'],
+                        'change_percent' => $value['change_percent']
                     ];
                 }
             }
@@ -107,6 +110,53 @@ class IndexController
         $page_size = $param['page_size'] ?? 4;
         $res = Article::where('article_cate_id', 1)->select('id', 'title', 'thumb', 'short_content', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
+    }
+
+
+
+    /**
+     * showdoc
+     * @catalog 主页
+     * @title 帮助反馈
+     * @description 帮助反馈
+     * @method get
+     * @url index/help
+     * @return {"code":200,"data":[{"id":25,"title":"\u767b\u5f55\u65b9\u5f0f","content":"<p><\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p>"},{"id":26,"title":"\u94b1\u5305\u65e0\u6cd5\u5145\u5e01","content":"<p><\/p><p>\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01<\/p><p>\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01<\/p>"}]}
+     * @return_param title string 标题
+     * @return_param content string 内容
+     * @remark 无
+     * @number 1
+     */
+    public function help()
+    {
+        $res = Article::query()->where('article_cate_id', 2)->select('title','content')->get();
+        return response()->json(['code' => 200, 'data' => $res]);
+    }
+
+    /**
+     * showdoc
+     * @catalog 主页
+     * @title 提交反馈
+     * @description 提交反馈
+     * @method post
+     * @param type string 必选 类型0功能异常1体验问题2功能建议3其他问题
+     * @param content string 必选 提交内容
+     * @url index/feedback
+     * @return {"code":200,"message":"\u63d0\u4ea4\u6210\u529f,\u611f\u8c22\u60a8\u7684\u53cd\u9988"}
+     * @remark 无
+     * @number 1
+     */
+    public function feedback(){
+        $param = request()->input();
+        if(!isset($param['type']) || !in_array($param['type'],[0,1,2,3])){
+            throw  new VerifyException('请检查提交类型');
+        }
+        if(!isset($param['content'])) {
+            throw new VerifyException('内容不能为空');
+        }
+        Active::create($param);
+
+        return response()->json(['code'=>200,'message'=>'提交成功,感谢您的反馈']);
     }
 
 }

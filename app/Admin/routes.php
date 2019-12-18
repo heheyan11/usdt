@@ -17,6 +17,7 @@ Route::group([
     $router->resource('configs', ConfController::class);
 
     $router->resource('articles',ArticleController::class);
+    $router->resource('question',QuestionController::class);
     $router->resource('article-cates',ArticleCateController::class);
 
     $router->resource('slides', SlideController::class);
@@ -36,6 +37,8 @@ Route::group([
     $router->get('ordercancel','OrderController@cancel');
 
     $router->get('form-crow','LogController@crow');
+
+    $router->get('active','LogController@active');
 
 
 

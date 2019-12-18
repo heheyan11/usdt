@@ -9,10 +9,13 @@ use App\Http\Requests\InfoRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Crowdfunding;
 use App\Models\LogIncome;
+use App\Models\OrderTi;
+use App\Models\User;
 use App\Models\UserCrow;
 use App\Services\CardService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+
 class UserController
 {
     /**
@@ -33,6 +36,7 @@ class UserController
         $user = \Auth::guard('api')->user();
         return response()->json(['code' => 200, 'data' => new UserResource($user), 'message' => 'ok']);
     }
+
     /**
      * showdoc
      * @catalog 我的
@@ -151,7 +155,7 @@ class UserController
         })->select('id', 'code', 'title', 'target_amount', 'total_amount', 'status', 'income', 'run_status', 'created_at', 'start_at', 'end_at')->get();
 
         foreach ($crow as $value) {
-         //   dd($value->toArray());die;
+            //   dd($value->toArray());die;
             $value->diff_day = 0;
             //可以众筹
             if ($value->status == Crowdfunding::STATUS_FUNDING || $value->status == Crowdfunding::STATUS_WAIT) {
@@ -193,9 +197,9 @@ class UserController
         $user = \Auth::guard('api')->user();
 
         $data = Cache::remember('user_income' . $user->id, 15, function () use ($user) {
-            $my = UserCrow::query()->where('user_id', $user->id)->where('status', 1)->sum('amount');
-            $friend = UserCrow::query()->whereIn('user_id', $user->children()->pluck('id'))->where('status', 1)->sum('amount');
-            $income = LogIncome::query()->where('user_id', $user->id)->sum('income');
+            $my = UserCrow::query()->where('user_id', $user->id)->sum('amount');
+            $friend = UserCrow::query()->whereIn('user_id', $user->children()->pluck('id'))->sum('amount');
+            $income = LogIncome::query()->where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->sum('income');
             return ['my' => $my, 'friend' => $friend, 'income' => $income];
         });
         return response()->json(['code' => 200, 'message' => 'ok', 'data' => $data]);
@@ -225,8 +229,121 @@ class UserController
         $param = request()->input();
         $user = \Auth::guard('api')->user();
         $page_size = $param['page_size'] ?? 30;
-        $res = LogIncome::where('user_id', $user->id)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
+        $res = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
+    }
+
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 团队收益
+     * @description 团队收益统计
+     * @method get
+     * @url user/teamincome
+     * @return {"code":200,"message":"ok","data":{"friend":"1590.4000","team":"214.7040"}}
+     * @return_param my string 我申请的
+     * @return_param friend string 好友收益
+     * @return_param team string 我的团队收益总计
+     * @remark 无
+     * @number 1
+     */
+    public function teamincome()
+    {
+        $user = \Auth::guard('api')->user();
+        $data = Cache::remember('user_teamincome' . $user->id, 15, function () use ($user) {
+            $friend = LogIncome::query()->whereIn('user_id', $user->children()->pluck('id'))->where('is_team', LogIncome::TEAM_NO)->sum('income');
+            $team = LogIncome::query()->where('user_id', $user->id)->where('is_team', LogIncome::TEAM_YES)->sum('income');
+            return ['friend' => $friend, 'team' => $team];
+        });
+        return response()->json(['code' => 200, 'message' => 'ok', 'data' => $data]);
+    }
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 团队收益
+     * @description 团队收益详情
+     * @method get
+     * @url user/teamincomelog
+     * @return {"current_page":1,"data":[{"title":"\u8d21\u732e\u5956 \u7531\uff1a1337****424\u63d0\u4f9b","amount":"2000.0000","income":"15.9040","created_at":"2019-12-17"},{"title":"\u76f4\u63a8\u597d\u53cb1337****424\u63d0\u4f9b","amount":"2000.0000","income":"198.8000","created_at":"2019-12-17"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/teamincomelog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/teamincomelog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/teamincomelog","per_page":30,"prev_page_url":null,"to":2,"total":2}
+     * @return_param current_page string 当前页
+     * @return_param current_page string 分页数据
+     * @return_param last_page string 最后一页
+     * @return_param per_page string 每页显示数
+     * @return_param title string 消息
+     * @return_param amount string 申请额度
+     * @return_param income string 获得收益
+     * @return_param created_at string 时间
+     * @remark 无
+     * @number 1
+     */
+    public function teamincomelog()
+    {
+        $param = request()->input();
+        $user = \Auth::guard('api')->user();
+        $page_size = $param['page_size'] ?? 30;
+        $res = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_YES)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
+        return response()->json($res);
+    }
+
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 提币记录
+     * @description 提币记录
+     * @method get
+     * @url user/incomelog
+     * @return {"current_page":1,"data":[{"amount":"500.0000","created_at":"2019-12-18 01:33:45"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/tilog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/tilog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/tilog","per_page":30,"prev_page_url":null,"to":1,"total":1}
+     * @return_param current_page string 当前页
+     * @return_param current_page string 分页数据
+     * @return_param last_page string 最后一页
+     * @return_param per_page string 每页显示数
+     * @return_param amount string 申请额度
+     * @return_param created_at string 时间
+     * @remark 无
+     * @number 1
+     */
+    public function tilog()
+    {
+        $param = request()->input();
+        $user = \Auth::guard('api')->user();
+        $page_size = $param['page_size'] ?? 30;
+        $res = OrderTi::where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
+        return response()->json($res);
+    }
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 邀请好友
+     * @description 邀请好友申请记录
+     * @method get
+     * @url user/friend
+     * @return {"code":200,"data":{"join":[{"headimgurl":"headimg.jpg","phone":"139****0102","created_at":"2019-12-09 05:59:47"}],"nojoin":[{"headimgurl":"headimg.jpg","phone":"137****5739","created_at":"2019-12-09 05:59:47"},{"headimgurl":"headimg.jpg","phone":"133****9221","created_at":"2019-12-09 05:59:47"}]}}
+     * @return_param headimgurl string 头像
+     * @return_param phone string 手机
+     * @return_param created_at string 注册时间
+     * @remark 无
+     * @number 1
+     */
+    public function friend()
+    {
+        $data = Cache::remember('user_friend', 15, function () {
+            $user = \Auth::guard('api')->user();
+            $join = $user->children()->has('crows')->select('headimgurl', 'phone', 'created_at')->get()->map(function ($value) {
+                $value->phone = substr_replace($value->phone, '****', 3, 4);
+                return $value;
+            });
+            $nojoin = $user->children()->doesntHave('crows')->select('headimgurl', 'phone', 'created_at')->get()->map(function ($value) {
+                $value->phone = substr_replace($value->phone, '****', 3, 4);
+                return $value;
+            });
+
+            return ['join' => $join, 'nojoin' => $nojoin];
+        });
+        return response()->json(['code' => 200, 'data' => $data]);
     }
 
 }

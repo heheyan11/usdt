@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\LogForm;
+use App\Models\LogIncome;
 use App\Models\UserCrow;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -65,18 +66,36 @@ class SendHong implements ShouldQueue
             //给自己
             $self = bmul($baseMoney, $base_rate);
             $value->user->wallet()->increment('amount', $self);
-            $value->user->logincomes()->create(['title' => $this->plan->title, 'income' => $self, 'amount' => $value->amount, 'crowdfunding_id' => $this->plan->id]);
+            $value->user->logincomes()->create([
+                'title' => $this->plan->title,
+                'income' => $self,
+                'amount' => $value->amount,
+                'crowdfunding_id' => $this->plan->id,
+                'is_team'=>LogIncome::TEAM_NO,
+            ]);
             //给上线
             $up_1 = bmul($baseMoney, $one_rate);
             if ($value->user->parent_id && $up_1) {
                 $parent = $value->user->parent;
                 $parent->wallet()->increment('amount', $up_1);
-                $parent->logincomes()->create(['title' => '直推好友' . str_phone($value->user->phone) . '提供', 'income' => $up_1, 'amount' => $value->amount, 'crowdfunding_id' => $this->plan->id]);
+                $parent->logincomes()->create([
+                    'title' => '直推好友' . str_phone($value->user->phone) . '提供',
+                    'income' => $up_1,
+                    'amount' => $value->amount,
+                    'crowdfunding_id' => $this->plan->id,
+                    'is_team'=>LogIncome::TEAM_YES,
+                ]);
                 $up_2 = bmul($baseMoney, $two_rate);
                 //2级上线
                 if ($parent->parent_id && $up_2) {
                     $parent->parent->wallet()->increment('amount', $up_2);
-                    $parent->parent->logincomes()->create(['title' => '隔代好友' . str_phone($value->user->phone) . '提供', 'income' => $up_2, 'amount' => $value->amount, 'crowdfunding_id' => $this->plan->id]);
+                    $parent->parent->logincomes()->create([
+                        'title' => '隔代好友' . str_phone($value->user->phone) . '提供',
+                        'income' => $up_2,
+                        'amount' => $value->amount,
+                        'crowdfunding_id' => $this->plan->id,
+                        'is_team'=>LogIncome::TEAM_YES,
+                    ]);
                 } elseif ($up_2) {
                     $plantIncome = badd($plantIncome, $up_2);
                     $record[] = ['message' => '用户' . $value->user->phone . '没有2级上线', 'amount' => $up_2];
@@ -104,7 +123,13 @@ class SendHong implements ShouldQueue
 
                     $money = bmul($lead, 0.1);
                     $baba->wallet()->increment('amount', $money);
-                    $baba->logincomes()->create(['title' => '平级贡献奖 由：' . str_phone($value->user->phone) . '提供.', 'income' => $money, 'amount' => $value->amount, 'crowdfunding_id' => $this->plan->id]);
+                    $baba->logincomes()->create([
+                        'title' => '平级贡献奖 由：' . str_phone($value->user->phone) . '提供.',
+                        'income' => $money,
+                        'amount' => $value->amount,
+                        'crowdfunding_id' => $this->plan->id,
+                        'is_team'=>LogIncome::TEAM_YES,
+                    ]);
                     $plantIncome = bsub($plantIncome, $money);
                     $record[] = ['message' => "{$value->user->phone}和{$baba->phone}平级，平台支出", 'amount' => -$money];
 
@@ -131,7 +156,13 @@ class SendHong implements ShouldQueue
                             $money = bsub($lead, $sub);
                     }
                     $baba->wallet()->increment('amount', $money);
-                    $baba->logincomes()->create(['title' => '贡献奖 由：' . str_phone($value->user->phone) . '提供', 'income' => $money, 'amount' => $value->amount, 'crowdfunding_id' => $this->plan->id]);
+                    $baba->logincomes()->create([
+                        'title' => '贡献奖 由：' . str_phone($value->user->phone) . '提供',
+                        'income' => $money,
+                        'amount' => $value->amount,
+                        'crowdfunding_id' => $this->plan->id,
+                        'is_team'=>LogIncome::TEAM_YES,
+                    ]);
                 }
                 $level = $baba->share_level;
             }

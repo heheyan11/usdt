@@ -46,6 +46,9 @@ Route::group(['middleware'=>'auth:api'],function (){
     Route::post('crow/buy','CrowController@buy');
     Route::post('crow/quit','CrowController@quit');
 
+    Route::get('index/help','IndexController@help');
+    Route::post('index/feedback','IndexController@feedback');
+
     Route::get('wallet/index','WalletController@index');
     Route::post('wallet/withdraw','WalletController@withDraw');
 
@@ -55,6 +58,8 @@ Route::group(['middleware'=>'auth:api'],function (){
     Route::post('secret/setpassword','SecretController@setPassPass');
     Route::post('secret/changepaypass','SecretController@changePayPass');
 
+
+
     Route::get('user/index','UserController@index');
     Route::post('user/auth','UserController@auth');
     Route::post('user/changeinfo','UserController@changeInfo');
@@ -62,6 +67,10 @@ Route::group(['middleware'=>'auth:api'],function (){
 
     Route::get('user/income','UserController@income');
     Route::get('user/incomelog','UserController@incomelog');
+    Route::get('user/teamincome','UserController@teamincome');
+    Route::get('user/teamincomelog','UserController@teamincomelog');
+    Route::get('user/tilog','UserController@tilog');
+    Route::get('user/friend','UserController@friend');
 
     Route::post('article/parise','ArticleController@parise');
     Route::post('upload','UploadContoller@uploadImg');
