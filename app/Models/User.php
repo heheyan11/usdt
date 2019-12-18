@@ -64,15 +64,15 @@ class User extends Authenticatable
     {
 
         $num = Cache::get('lockpaypass' . $this->id);
-        if ($num && (3 - $num) <= 0) {
+        if ($num && (5 - $num) <= 0) {
             throw new VerifyException('账户异常！请您修改支付密码');
         }
         $myPass = $type == 'pass' ? $this->password : $this->paypass;
 
         $status = Hash::check($pass, $myPass);
         if (!$status) {
-            Cache::increment('lockpaypass' . $this->id);
-            throw new VerifyException('支付密码错误,您还有' . $num . '次机会');
+            $new = Cache::increment('lockpaypass' . $this->id);
+            throw new VerifyException('支付密码错误,您还有' . (5-$new) . '次机会');
         } elseif ($num) {
             Cache::forget('lockpaypass' . $this->id);
         }

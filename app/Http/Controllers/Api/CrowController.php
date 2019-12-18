@@ -264,7 +264,7 @@ class CrowController
     {
         $param = request()->input();
         $user = \Auth::guard('api')->user();
-        //$user->checkPassLimit($param['password'], 'pay');
+      //  $user->checkPassLimit($param['password'], 'pay');
         $crow = Crowdfunding::query()->where('id', $param['crow_id'])->first();
         if (!$crow) {
             throw new VerifyException('计划失效');
