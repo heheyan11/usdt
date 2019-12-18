@@ -4,6 +4,7 @@
 namespace App\Admin\Actions\Crow;
 
 
+use App\Jobs\PlanEnd;
 use App\Models\Crowdfunding;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
@@ -16,8 +17,7 @@ class End extends RowAction
     {
         if ($model->status == Crowdfunding::RUN_START) {
 
-            $model->run_status = Crowdfunding::RUN_STOP;
-            $model->save();
+
 
             dispatch(new PlanEnd($model));
 

@@ -23,21 +23,23 @@ class CrowdfundingResource extends Resource
         }
         $isBuy = 0;
         $out = '';
-
+        $user = \Auth::guard('api')->user();
         if ($this->status != Crowdfunding::STATUS_END || $this->run_status != Crowdfunding::RUN_STOP) {
-            $user = \Auth::guard('api')->user();
             if ($user) {
                 $usercrow = $this->crows()->where('user_id', $user->id)->first();
                 if ($usercrow) {
-                    $rate = get_conf()['out_rate'];
                     $isBuy = 1;
                     $out = [
                         'amount' => $usercrow->amount,
-                        'rate' => $rate,
-                        'allow_amount' => bsub($usercrow->amount, ($usercrow->amount * $rate / 100))
+                        'rate' => $this->out_rate,
+                        'allow_amount' => bsub($usercrow->amount, ($usercrow->amount * $this->out_rate / 100))
                     ];
                 }
             }
+        }
+        $is_cancel = 0;
+        if ($user && $this->ordercancels()->where('user_id', $user->id)->exists()) {
+            $is_cancel = 1;
         }
 
         return [
@@ -55,11 +57,12 @@ class CrowdfundingResource extends Resource
             'income' => $this->income,
             'status' => $this->status,
             'run_status' => $this->run_status,
-            'created_at' => Carbon::parse($this->created_at)->toDateString(),
+            'created_at' => $this->created_at,
             'start_at' => $this->start_at ? date('Y-m-d', $this->start_at) : '',
             'end_at' => $this->end_at ? date('Y-m-d', $this->end_at) : '',
             'diff_day' => $diff,
             'is_buy' => $isBuy,
+            'is_cancel' => $is_cancel,
             'out' => $out
         ];
     }

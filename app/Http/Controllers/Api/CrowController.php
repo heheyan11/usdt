@@ -109,6 +109,7 @@ class CrowController
      * @return_param run_status string 量化状态run量化中stop量化结束
      * @return_param diff_day int 倒计时天
      * @return_param is_buy int 1已购买0未购买
+     * @return_param is_cancel int 1撤销审核中0没有审核
      * @return_param out int 如果允许撤销并且已购买，此处为撤销信息
      * @return_param out.amount int 申请额度
      * @return_param out.rate int 撤销手续费
@@ -120,7 +121,6 @@ class CrowController
     {
         $id = request()->input('crow_id');
         if (!$id) throw new BusException('缺少参数', 422);
-
         $crow = Crowdfunding::find($id);
         return response()->json(['code' => 200, 'data' => new CrowdfundingResource($crow), 'message' => 'ok']);
     }
