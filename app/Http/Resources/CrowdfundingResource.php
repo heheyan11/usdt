@@ -41,7 +41,6 @@ class CrowdfundingResource extends Resource
         if ($user && $this->ordercancels()->where('user_id', $user->id)->exists()) {
             $is_cancel = 1;
         }
-
         return [
             'code' => $this->code,
             'crow_id' => $this->id,

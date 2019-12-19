@@ -66,7 +66,6 @@ class IndexController
 
     private function overall()
     {
-
         return Cache::remember('hangqing', 15, function () {
             $eth = 'https://dncapi.bqiapp.com/api/coin/web-coinrank?page=1&type=-1&pagesize=100&webp=1';
             $guzzle = new \GuzzleHttp\Client();
@@ -84,7 +83,6 @@ class IndexController
             }
             return $arr;
         });
-
     }
 
     /**
@@ -111,8 +109,6 @@ class IndexController
         $res = Article::where('article_cate_id', 1)->select('id', 'title', 'thumb', 'short_content', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
-
-
 
     /**
      * showdoc

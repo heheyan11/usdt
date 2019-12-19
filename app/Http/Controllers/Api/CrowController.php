@@ -87,7 +87,7 @@ class CrowController
      * @method get
      * @url crow/detail
      * @param crow_id string 必填 id
-     * @return {"code":200,"data":{ "code": "55563","crow_id": 1,"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","target_amount":"10000.0000","total_amount":"10000.0000","loading":100,"manage_rate":"0.5","code":"40621","content":null,"income":"50000.0000","status":"end","run_status":"run","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":356,"is_buy":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
+     * @return {"code":200,"data":{ "code":"40621","crow_id":1,"title":"\u4f17\u7b792\u53f7","allow":"\u64a4\u9500\u9700\u8981\u6536\u53d6\u624b\u7eed\u8d39\u767e\u5206\u4e4b10%","noallow":"\u4e0d\u80fd\u64a4\u9500\u3002","manage_rate":"0.60","out_rate":"10.00","out_amount":"100.0000","target_amount":"10000.0000","total_amount":"10000.0000","allow_amount":"0.0000","loading":100,"content":null,"income":"50000.0000","status":"end","run_status":"stop","created_at":"2019-12-14","start_at":"2019-12-13","end_at":"2020-12-07","diff_day":354,"is_buy":0,"is_cancel":1,"out":{"amount":"8000.0000","rate":"5.0000","allow_amount":"7600.0000"}},"message":"ok"}
      * @return_param crow_id string 计划id
      * @return_param code string 计划编号
      * @return_param title string 标题
@@ -111,7 +111,7 @@ class CrowController
      * @return_param diff_day int 倒计时天
      * @return_param is_buy int 1已购买0未购买
      * @return_param is_cancel int 1撤销审核中0没有审核
-     * @return_param out int 如果允许撤销并且已购买，此处为撤销信息
+     * @return_param out int 如果已购买is_buy值为1，此处为撤销信息
      * @return_param out.amount int 申请额度
      * @return_param out.rate int 撤销手续费
      * @return_param out.allow_amount int 可撤销最大数量
