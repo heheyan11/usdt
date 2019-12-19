@@ -72,7 +72,7 @@ class User extends Authenticatable
         $status = Hash::check($pass, $myPass);
         if (!$status) {
             $new = Cache::increment('lockpaypass' . $this->id);
-            throw new VerifyException('支付密码错误,您还有' . (5-$new) . '次机会');
+            throw new VerifyException('密码错误,您还有' . (5-$new) . '次机会');
         } elseif ($num) {
             Cache::forget('lockpaypass' . $this->id);
         }

@@ -48,9 +48,7 @@ class CrowController
     public function index()
     {
         $funding = $run = $stop = [];
-
         $crow = Crowdfunding::all(['id', 'code', 'title', 'target_amount', 'income', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at']);
-
         //$user = \Auth::guard('api')->user();
         foreach ($crow as $value) {
             /* $value->isBuy = 0;
@@ -101,6 +99,7 @@ class CrowController
      * @return_param manage_rate string 管理费百分比
      * @return_param out_rate string 退出计划手续违约金比例
      * @return_param out_amount string 退出计划最低额度
+     * @return_param allow_amount string 允许申请最大额度
      * @return_param code string 订单
      * @return_param content string 详情
      * @return_param income string 累计收益
@@ -206,6 +205,7 @@ class CrowController
         if ($user->wallet->amount < $param['amount']) {
             throw new VerifyException('您的余额不足，请充值');
         }
+
         $conf = get_conf();
         \DB::transaction(function () use ($param, $user, $conf) {
             $crow = Crowdfunding::query()->where('id', $param['crow_id'])->lockForUpdate()->first();

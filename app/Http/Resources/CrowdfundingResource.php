@@ -53,6 +53,7 @@ class CrowdfundingResource extends Resource
             'out_amount' => $this->out_amount,
             'target_amount' => $this->target_amount,
             'total_amount' => $this->total_amount,
+            'allow_amount' => bsub($this->target_amount, $this->total_amount),
             'loading' => $this->percent,
             'code' => $this->code,
             'content' => $this->content,
