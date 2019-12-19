@@ -26,7 +26,8 @@ class ArticleController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Article);
-        $grid->model()->orderByDesc('id');
+
+        $grid->model()->where('article_cate_id','<>',2)->orderByDesc('id');
 
         $grid->filter(function ($filter) {
             $filter->expand();
@@ -56,7 +57,7 @@ class ArticleController extends AdminController
         });
         $grid->column('id', 'id');
         $grid->column('title', '标题');
-        $grid->cate()->title('分类');
+       /* $grid->cate()->title('分类');*/
         $grid->column('short_content', '简介');
         $grid->column('clicks', __('点击量'));
         $grid->column('zan', __('点赞量'));
@@ -86,10 +87,8 @@ class ArticleController extends AdminController
         $show->field('share', '分享数');
         $show->field('created_at', '创建时间');
         $show->field('updated_at', '修改时间');
-
         return $show;
     }
-
     /**
      * Make a form builder.
      *
@@ -99,18 +98,15 @@ class ArticleController extends AdminController
     {
         $form = new Form(new Article);
         $res = ArticleCate::selectOptions(null, null);
-
         $form->select('article_cate_id', '分类')->options($res)->required()->default(array_keys($res)[1]);
         $form->text('title', '标题')->required();
         $form->multipleImage('imgs', '配图')->removable()->uniqueName();
         $form->editor('content', '内容')->required();
         $form->saved(function (Form $form) {
-
             if (isset($form->model()->imgs[0])) $form->model()->thumb = $form->model()->imgs[0];
             if (!$form->model()->short_content) $form->model()->short_content = $this->real_trim($form->content);
             $form->model()->save();
         });
-
         return $form;
     }
 
