@@ -99,6 +99,8 @@ class CrowController
      * @return_param total_amount string 当前申请额度
      * @return_param loading string 加载比例2位小数
      * @return_param manage_rate string 管理费百分比
+     * @return_param out_rate string 退出计划手续违约金比例
+     * @return_param out_amount string 退出计划最低额度
      * @return_param code string 订单
      * @return_param content string 详情
      * @return_param income string 累计收益

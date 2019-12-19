@@ -45,7 +45,7 @@ class BuyRequest extends FormRequest
             'amount.regex'=>'申请数量格式不正确',
             'password.min' => '支付密码至少6位',
             'password.alpha_num' => '支付密码格式有误',
-            'password.password' => '请输入支付密码',
+            'password.required' => '请输入支付密码',
 
         ];
     }

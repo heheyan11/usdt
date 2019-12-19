@@ -53,6 +53,7 @@ class UserController extends AdminController
         $grid->column('created_at', '创建时间');
         return $grid;
     }
+
     /**
      * Make a show builder.
      *
@@ -88,17 +89,19 @@ class UserController extends AdminController
         return $form;
     }
 
-
     public function tree(Content $content, UserTreeService $tree)
     {
         $data = $tree->getUserTree();
-
-      //  $data = collect([['id'=>0,'name'=>'根','children'=>$data->toArray()]]);
-
+        $data = array_values($data->toArray());
+        $data = [[
+            'id' => 0,
+            'name' => '根',
+            'children' => $data
+        ]];
         return $content
             ->header('用户树状图')
             // body 方法可以接受 Laravel 的视图作为参数
-            ->body(view('admin.tree', ['data' => $data]));
+            ->body(view('admin.tree', ['data' => json_encode($data)]));
     }
 
     public function selftree(Content $content, UserTreeService $tree)
@@ -108,7 +111,7 @@ class UserController extends AdminController
         $path = User::query()->where('id', $id)->value('path');
         $allUser = User::query()->where('id', $id)->orWhere('path', 'like', $path . $id . '-%')->get();
         $allUser[0]->parent_id = 0;
-        $data = $tree->getUserTree(null,$allUser)->toJson();
+        $data = $tree->getUserTree(null, $allUser)->toJson();
 
         return $content
             ->header('用户树状图')
