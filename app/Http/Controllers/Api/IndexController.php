@@ -125,7 +125,7 @@ class IndexController
      */
     public function help()
     {
-        $res = Article::query()->where('article_cate_id', 2)->select('title','content')->get();
+        $res = Article::query()->where('article_cate_id', 2)->select('id', 'title', 'content')->get();
         return response()->json(['code' => 200, 'data' => $res]);
     }
 
@@ -142,17 +142,18 @@ class IndexController
      * @remark 无
      * @number 1
      */
-    public function feedback(){
+    public function feedback()
+    {
         $param = request()->input();
-        if(!isset($param['type']) || !in_array($param['type'],[0,1,2,3])){
+        if (!isset($param['type']) || !in_array($param['type'], [0, 1, 2, 3])) {
             throw  new VerifyException('请检查提交类型');
         }
-        if(!isset($param['content'])) {
+        if (!isset($param['content'])) {
             throw new VerifyException('内容不能为空');
         }
         Active::create($param);
 
-        return response()->json(['code'=>200,'message'=>'提交成功,感谢您的反馈']);
+        return response()->json(['code' => 200, 'message' => '提交成功,感谢您的反馈']);
     }
 
 }
