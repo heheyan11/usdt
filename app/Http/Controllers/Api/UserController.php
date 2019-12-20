@@ -57,6 +57,8 @@ class UserController
     {
         $param = $request->input();
         $user = \Auth::guard('api')->user();
+
+        return response()->json(['code' => 200, 'message' => '认证成功', 'data' => ['name' => '李名', 'code' => '610523199205351155']]);
         if ($user->is_verify == 1) {
             throw new VerifyException('请勿重复审核');
         }

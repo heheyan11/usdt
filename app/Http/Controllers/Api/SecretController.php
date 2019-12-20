@@ -176,9 +176,8 @@ class SecretController
      * @title 设置支付密码
      * @description 设置支付密码
      * @method post
-     * @param password string 密码
+     * @param password string 要设置的支付密码
      * @url secret/setpaypass
-     * @param password 必填 string 用户密码
      * @return {"code":200,"message":'设置密码成功'}
      * @remark 一次性接口
      * @number 5
@@ -195,12 +194,12 @@ class SecretController
     }
 
     /**
-     * showdoc
+     *
      * @catalog 安全
      * @title 设置登录密码
      * @description 设置登录密码
      * @method post
-     * @param password string 密码
+     * @param password string 要设置的登录密码
      * @url secret/setpassword
      * @param password 必填 string 用户密码
      * @return {"code":200,"message":'设置登录密码成功'}
