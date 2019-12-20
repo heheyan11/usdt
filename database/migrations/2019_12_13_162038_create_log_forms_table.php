@@ -15,6 +15,7 @@ class CreateLogFormsTable extends Migration
     {
         Schema::create('log_forms', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('log_crow_id');
             $table->string('message');
             $table->decimal('amount',18,4);
             $table->timestamp('created_at');
