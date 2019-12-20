@@ -63,7 +63,10 @@ class LoginController extends BasePass
                 }
                 $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
                 if (isset($param['parent_phone'])) {
-                    $insert['parent_id'] = User::query()->where('phone', $param['parent_phone'])->value('id');
+                    $res = User::query()->where('share_code', $param['parent_phone'])->first();
+                    if($res){
+                        $insert['parent_id'] = $res['id'];
+                    }
                 }
                 \DB::transaction(function () use ($insert, $param) {
                     $user = User::create($insert);
@@ -77,7 +80,6 @@ class LoginController extends BasePass
                     $data = $rs['data']['eth'];
                     $data['kid'] = $data['id'];
                     $user->wallet()->create($data);
-
                     //event(new Registered($user));
                     //如果绑定微信
                     if (isset($param['wechat_openid'])) {

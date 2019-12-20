@@ -34,7 +34,7 @@ class SecretController
     public function code(RegisterRequest $request)
     {
         $phone = $request->input('phone');
-       // $res = app(SmsService::class)->sendSmsCode($phone, '4102536');
+       // $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
       /*  if ($res['code'] != 200) {
             throw new BusException('短信发送失败', 412);
         }*/

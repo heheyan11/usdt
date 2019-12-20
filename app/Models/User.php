@@ -56,7 +56,9 @@ class User extends Authenticatable
             if ($user->name) {
                 $user->name = mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9);
             }
-
+            do {
+                $user->share_code = mt_rand(1, 9) . mt_rand(0, 9) . mt_rand(0, 9) . mt_rand(0, 9) . mt_rand(0, 9) . mt_rand(0, 9);
+            } while ($user::query()->where('share_code', $user->share_code)->exists());
         });
     }
 
@@ -72,7 +74,7 @@ class User extends Authenticatable
         $status = Hash::check($pass, $myPass);
         if (!$status) {
             $new = Cache::increment('lockpaypass' . $this->id);
-            throw new VerifyException('密码错误,您还有' . (5-$new) . '次机会');
+            throw new VerifyException('密码错误,您还有' . (5 - $new) . '次机会');
         } elseif ($num) {
             Cache::forget('lockpaypass' . $this->id);
         }

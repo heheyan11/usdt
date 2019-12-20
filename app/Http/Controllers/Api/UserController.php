@@ -7,6 +7,7 @@ use App\Exceptions\VerifyException;
 use App\Http\Requests\CardRequest;
 use App\Http\Requests\InfoRequest;
 use App\Http\Resources\UserResource;
+use App\Models\ChongOrder;
 use App\Models\Crowdfunding;
 use App\Models\LogIncome;
 use App\Models\OrderTi;
@@ -42,15 +43,13 @@ class UserController
      * @catalog 我的
      * @title 认证身份证
      * @description 认证身份提交
-     * @param name string 必填 姓名
-     * @param code string 必填 身份证号
      * @param zheng string 必填 正面照片(原样返回不要加域名)
      * @param fan string 必填 反面照片(不要加域名)
      * @method post
      * @url user/auth
      * @return {"code":200,"message":"\u8ba4\u8bc1\u6210\u529f","data":{"name":"\u5f20\u4e09","code":"610522151122995535"}}
      * @return_param name string 身份证姓名
-     * @return_param name string 身份证号码
+     * @return_param code string 身份证号码
      * @remark 无
      * @number 1
      */
@@ -297,15 +296,13 @@ class UserController
         $res = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_YES)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
-
-
     /**
      * showdoc
      * @catalog 我的
      * @title 提币记录
      * @description 提币记录
      * @method get
-     * @url user/incomelog
+     * @url user/tilog
      * @return {"current_page":1,"data":[{"amount":"500.0000","created_at":"2019-12-18 01:33:45"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/tilog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/tilog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/tilog","per_page":30,"prev_page_url":null,"to":1,"total":1}
      * @return_param current_page string 当前页
      * @return_param current_page string 分页数据
@@ -324,6 +321,33 @@ class UserController
         $res = OrderTi::where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 充币记录
+     * @description 充币记录
+     * @method get
+     * @url user/orderchong
+     * @return {"current_page":1,"data":[{"amount":"500.0000","created_at":"2019-12-18 01:33:45"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/orderchong?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/orderchong?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/orderchong","per_page":30,"prev_page_url":null,"to":1,"total":1}
+     * @return_param current_page string 当前页
+     * @return_param current_page string 分页数据
+     * @return_param last_page string 最后一页
+     * @return_param per_page string 每页显示数
+     * @return_param amount string 申请额度
+     * @return_param created_at string 时间
+     * @remark 无
+     * @number 1
+     */
+    public function orderchong()
+    {
+        $param = request()->input();
+        $user = \Auth::guard('api')->user();
+        $page_size = $param['page_size'] ?? 30;
+        $res = ChongOrder::query()->where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
+        return response()->json($res);
+    }
+
 
     /**
      * showdoc

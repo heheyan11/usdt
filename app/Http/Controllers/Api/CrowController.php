@@ -51,6 +51,7 @@ class CrowController
         $crow = Crowdfunding::all(['id', 'code', 'title', 'target_amount', 'income', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at']);
         //$user = \Auth::guard('api')->user();
         foreach ($crow as $value) {
+            $value->created_at = $value->created_at->format('Y-m-d'); //Carbon::parse($value->created_at)->toDateString();
             /* $value->isBuy = 0;
              if ($user && $value->crows()->where('user_id', $user->id)->exists()) {
                  $value->isBuy = 1;
@@ -62,7 +63,7 @@ class CrowController
                 $funding[] = $value;
             } //量化中
             elseif ($value->run_status == Crowdfunding::RUN_START && $value->status == Crowdfunding::STATUS_END) {
-                $value->created_at = Carbon::parse($value->created_at)->toDateString();
+
                 $value->start_at = date('Y-m-d', $value->start_at);
 
                 if ($value->end_at > time()) {

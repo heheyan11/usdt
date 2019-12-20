@@ -54,4 +54,9 @@ class UserLevel implements ShouldQueue
             break;
         }
     }
+
+    public function failed(Exception $exception)
+    {
+        app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['用户升级队列异常']);
+    }
 }

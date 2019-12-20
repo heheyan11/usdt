@@ -19,7 +19,6 @@ class UserController extends AdminController
      * @var string
      */
     protected $title = '用户列表';
-
     /**
      * Make a grid builder.
      *
@@ -28,7 +27,6 @@ class UserController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User);
-
         $grid->disableCreateButton();
         $grid->disableExport();
         $grid->disableRowSelector();
@@ -43,7 +41,6 @@ class UserController extends AdminController
             $actions->disableDelete();
             $actions->add(new Tree);
         });
-
         $grid->column('id', 'Id');
         $grid->column('phone', '电话');
         $grid->wallet()->amount('余额');
@@ -53,7 +50,6 @@ class UserController extends AdminController
         $grid->column('created_at', '创建时间');
         return $grid;
     }
-
     /**
      * Make a show builder.
      *
@@ -69,9 +65,50 @@ class UserController extends AdminController
         $show->field('parent_id', '上线');
         $show->field('created_at', '创建时间');
 
+        $show->panel()->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableDelete();
+            });;
+
+        $show->wallet('钱包信息',function ($wallet){
+            $wallet->panel()->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });;
+            $wallet->amount('数量');
+            $wallet->address('地址');
+            $wallet->privatekey('私钥');
+            $wallet->mnemonic('助记词');
+
+        });
+
+        $show->card('身份信息',function ($card){
+
+            $card->panel()->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });;
+            $card->name('姓名');
+            $card->code('身份证号');
+            $card->province('省');
+            $card->city('市');
+            $card->county('国家');
+            $card->birthday('生日');
+            $card->age('年龄');
+            $card->address('地址');
+            $card->nationality('民族');
+            $card->sex('性别');
+            $card->issue('签发机关');
+            $card->start_date('起始日期');
+            $card->end_date('结束日');
+            $card->face('正面')->image();
+            $card->back('反面')->image();
+
+        });
         return $show;
     }
-
     /**
      * Make a form builder.
      *
@@ -112,7 +149,6 @@ class UserController extends AdminController
         $allUser = User::query()->where('id', $id)->orWhere('path', 'like', $path . $id . '-%')->get();
         $allUser[0]->parent_id = 0;
         $data = $tree->getUserTree(null, $allUser)->toJson();
-
         return $content
             ->header('用户树状图')
             // body 方法可以接受 Laravel 的视图作为参数

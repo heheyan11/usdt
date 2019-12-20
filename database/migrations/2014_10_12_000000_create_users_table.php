@@ -15,9 +15,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('phone',11)->unique();
+            $table->char('phone', 11)->unique();
             $table->string('name')->nullable();
             $table->string('headimgurl');
+            $table->tinyInteger('sex')->default(0);
             $table->string('password')->nullable()->unique();
             $table->string('paypass')->nullable();
             $table->tinyInteger('is_verify')->default(\App\Models\User::CARD_NO);
@@ -30,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('path')->default('-');
             $table->tinyInteger('check_level')->default(0);
             $table->tinyInteger('share_level')->default(0);
+            $table->integer('share_code');
             $table->rememberToken();
             $table->timestamps();
         });

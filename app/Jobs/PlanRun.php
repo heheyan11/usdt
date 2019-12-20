@@ -35,4 +35,9 @@ class PlanRun implements ShouldQueue
             Message::create(['user_id'=>$value,'title'=>$this->plan->title,'content'=>'量化已启动']);
         }
     }
+
+    public function failed(Exception $exception)
+    {
+        app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['运行队列计划异常']);
+    }
 }

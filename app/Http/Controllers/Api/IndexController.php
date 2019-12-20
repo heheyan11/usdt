@@ -118,6 +118,7 @@ class IndexController
      * @method get
      * @url index/help
      * @return {"code":200,"data":[{"id":25,"title":"\u767b\u5f55\u65b9\u5f0f","content":"<p><\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p><p>\u767b\u5f55\u65b9\u5f0f\u767b\u5f55\u65b9\u5f0f<\/p>"},{"id":26,"title":"\u94b1\u5305\u65e0\u6cd5\u5145\u5e01","content":"<p><\/p><p>\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01<\/p><p>\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01\u94b1\u5305\u65e0\u6cd5\u5145\u5e01<\/p>"}]}
+     * @return_param id int id
      * @return_param title string 标题
      * @return_param content string 内容
      * @remark 无
