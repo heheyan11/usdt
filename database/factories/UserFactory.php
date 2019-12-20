@@ -15,7 +15,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\User::class, function (Faker $faker) {
 
-    for($i=0;$i<100;$i++){
+    for($i=0;$i<200;$i++){
         $arr[] = '13'.mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
     }
     $phone = $faker->randomElement($arr);

@@ -23,9 +23,9 @@ $factory->define(\App\Models\Wechat::class, function (Faker $faker) {
         'nickname'=>$faker->name,
         'openid'=> str_random(28),
         'sex'=>mt_rand(0,1),
-        'country'=>$faker->unique()->country,
-        'province'=>$faker->unique()->citySuffix,
-        'city'=>$faker->unique()->city,
+        'country'=>$faker->country,
+        'province'=>$faker->citySuffix,
+        'city'=>$faker->city,
        // 'language'=>$faker->unique()->languageCode,
         'headimgurl'=>$image
     ];

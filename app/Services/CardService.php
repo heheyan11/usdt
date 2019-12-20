@@ -24,7 +24,7 @@ class CardService
         $res = $this->http($url, http_build_query($param), $headers);
 
         if ($res['data']['respCode'] != '0000') {
-            throw new InternalException($res['data']['respMessage'], 200);
+            throw new InternalException($res['data']['respMessage']);
         }
         return $res['data'];
     }
@@ -41,7 +41,7 @@ class CardService
         try {
            $base64 = base64_encode($disk->get($file));
         }catch (\Exception $exception){
-            throw new InternalException('图片不存在，请重新上传', 200);
+            throw new InternalException('图片不存在，请重新上传');
         }
 
         $headers = array();
@@ -61,7 +61,7 @@ class CardService
         $res = $this->http($url, $body, $headers);
 
         if($res['code']!=200){
-            throw new InternalException('网络异常', 200);
+            throw new InternalException('网络异常');
         }
         if($type=='face'){
             return [
