@@ -47,7 +47,7 @@ class PlanEnd implements ShouldQueue
         });
     }
 
-    public function failed(Exception $exception)
+    public function failed(\Exception $exception)
     {
         app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['结束计划队列异常']);
     }

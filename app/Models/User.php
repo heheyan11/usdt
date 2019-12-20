@@ -53,7 +53,7 @@ class User extends Authenticatable
             if (!$user->headimgurl) {
                 $user->headimgurl = 'headimg.png';
             }
-            if ($user->name) {
+            if (!$user->name) {
                 $user->name = mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9) . mt_rand(1, 9);
             }
             do {

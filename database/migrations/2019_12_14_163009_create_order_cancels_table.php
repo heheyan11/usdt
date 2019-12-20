@@ -20,6 +20,7 @@ class CreateOrderCancelsTable extends Migration
             $table->decimal('amount',15,4);
             $table->decimal('rate',10,4);
             $table->decimal('shouxu',10,4);
+            $table->tinyInteger('status')->default(\App\Models\OrderCancel::STATUS_WAIT);
             $table->timestamps();
         });
     }
