@@ -24,7 +24,7 @@ class CardService
         $res = $this->http($url, http_build_query($param), $headers);
 
         if ($res['data']['respCode'] != '0000') {
-            throw new InternalException($res['respMessage'], 200);
+            throw new InternalException($res['data']['respMessage'], 200);
         }
         return $res['data'];
     }

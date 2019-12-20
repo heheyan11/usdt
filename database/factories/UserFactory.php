@@ -23,7 +23,7 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'phone' => $phone,
-        'headimgurl'=>'http://img14.360buyimg.com/mobilecms/s250x250_jfs/t1/36474/28/2429/517543/5cb9743aE168ee756/c70039f29f10f6b7.jpg',
+        'headimgurl'=>'headimg.png',
        // 'email' => $faker->unique()->safeEmail,
         'password' => bcrypt('secret'), // secret
        // 'remember_token' => str_random(10),

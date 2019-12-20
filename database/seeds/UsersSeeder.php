@@ -11,7 +11,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        $wechats = factory(\App\Models\Wechat::class,5)->create();
+        $wechats = factory(\App\Models\Wechat::class,100)->create();
         foreach ($wechats as $wechat){
             $user = factory(\App\Models\User::class,1)->create(['wechat_id'=>$wechat->id]);
 

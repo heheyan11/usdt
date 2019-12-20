@@ -43,8 +43,8 @@ class UserController
      * @catalog 我的
      * @title 认证身份证
      * @description 认证身份提交
-     * @param zheng string 必填 正面照片(原样返回不要加域名)
-     * @param fan string 必填 反面照片(不要加域名)
+     * @param face string 必填 正面照片(原样返回不要加域名)
+     * @param back string 必填 反面照片(不要加域名)
      * @method post
      * @url user/auth
      * @return {"code":200,"message":"\u8ba4\u8bc1\u6210\u529f","data":{"name":"\u5f20\u4e09","code":"610522151122995535"}}
@@ -321,7 +321,6 @@ class UserController
         $res = OrderTi::where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
-
     /**
      * showdoc
      * @catalog 我的
@@ -347,7 +346,6 @@ class UserController
         $res = ChongOrder::query()->where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
-
 
     /**
      * showdoc
@@ -380,5 +378,4 @@ class UserController
         });
         return response()->json(['code' => 200, 'data' => $data]);
     }
-
 }
