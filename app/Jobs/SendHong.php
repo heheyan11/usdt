@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\LogForm;
 use App\Models\LogIncome;
-use App\Models\UserCrow;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -184,7 +182,7 @@ class SendHong implements ShouldQueue
 
     public function failed(\Exception $exception)
     {
-        app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['发放红利队列异常']);
+        sendErr('发放红利队列异常');
     }
 
 }

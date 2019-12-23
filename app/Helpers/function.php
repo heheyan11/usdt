@@ -1,6 +1,7 @@
 <?php
 
 
+
 function badd($left_operand, $right_operand)
 {
 
@@ -68,4 +69,14 @@ function order_number(){
         $ORDERSN[$ors]=1;
     }
     return $ors.str_pad($ORDERSN[$ors],2,'0',STR_PAD_LEFT);     //链接字符串
+}
+
+/*
+ *  缓存并发送紧急短息
+ */
+function sendErr($message){
+    if(!\Illuminate\Support\Facades\Cache::has('error')){
+        app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],[$message]);
+        \Illuminate\Support\Facades\Cache::put('error',1,60);
+    }
 }

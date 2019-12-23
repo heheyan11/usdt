@@ -29,14 +29,34 @@ class OauthController
      * @return {"code":200,"openid":"dfdsfewf3f32323232","cmd":"login"}
      * @return_param wechat_openid string 用户openid
      * @return_param cmd string 执行路径
-     * @remark 1: 无
+     * @remark 1: 没有绑定手机号，请求登录接口 带上并wechat_openid参数绑定 2: 直接返回用户登录的参数
      * @number 4
      */
     public function wechat(WechatRequest $request)
     {
-        $param = $request->input();
-        Wechat::updateOrCreate(['openid' => $param['openid']], $param);
-        return response()->json(['code' => 200, 'cmd' => 'login', 'openid' => $param['openid']]);
+        $data = $request->input();
+        $wechat = Wechat::with('user')->where('openid', $data['openid'])->first();
+
+        //没有授权
+        if (!$wechat) {
+
+            Wechat::create($data);
+            return response()->json([
+                'code' => 200,
+                'wechat_openid' => $data['openid'],
+                'cmd' => route('login')
+            ]);
+        }
+        //没有注册
+        if (!$wechat->user) {
+            return response()->json([
+                'code' => 200,
+                'wechat_openid' => $data['openid'],
+                'cmd' => route('login')
+            ]);
+        }
+        return $this->blogin($wechat->user->phone, config('app.private_pass'));
+
     }
 
     /**
@@ -61,10 +81,26 @@ class OauthController
      */
     public function qq(WechatRequest $request)
     {
-        $param = $request->input();
-        $param['headimgurl'] = $param['figureurl_2'];
-        Qq::updateOrCreate(['openid' => $param['openid']], $param);
-        return response()->json(['code' => 200, 'cmd' => 'login', 'openid' => $param['openid']]);
+        $data = $request->input();
+        $data['headimgurl'] = $data['figureurl_2'];
+        $qq = Qq::with('user')->where('openid', $data['openid'])->first();
+        //没有授权
+        if (!$qq) {
+            Qq::create($data);
+            return response()->json([
+                'code' => 200,
+                'qq_openid' => $data['openid'],
+                'cmd' => route('login')
+            ]);
+        }
+        //没有注册
+        if (!$qq->user) {
+            return response()->json([
+                'code' => 200,
+                'qq_openid' => $data['openid'],
+                'cmd' => route('login')
+            ]);
+        }
+        return $this->blogin($qq->user->phone, config('app.private_pass'));
     }
-
 }

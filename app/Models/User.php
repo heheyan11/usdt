@@ -49,6 +49,8 @@ class User extends Authenticatable
                     $user->parent->is_directory = 1;
                     $user->parent->save();
                 }
+            }else{
+                $user->parent_id=0;
             }
             if (!$user->headimgurl) {
                 $user->headimgurl = 'headimg.png';

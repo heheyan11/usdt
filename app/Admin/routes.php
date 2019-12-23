@@ -26,7 +26,7 @@ Route::group([
     $router->resource('notices', NoticeController::class);
 
     $router->resource('users', UserController::class);
-
+    $router->get('api/parent', 'UserController@apiIndex');
     $router->get('users-tree','UserController@tree');
     $router->get('users-selftree','UserController@selftree')->name('self.tree');
 

@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Crowdfunding;
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -38,6 +37,6 @@ class PlanRun implements ShouldQueue
 
     public function failed(\Exception $exception)
     {
-        app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['运行队列计划异常']);
+        sendErr('计划运行队列计划异常');
     }
 }
