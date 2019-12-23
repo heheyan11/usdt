@@ -76,7 +76,7 @@ class OauthController
      * @return {"code":200,"openid":"dfdsfewf3f32323232","cmd":"login"}
      * @return_param wechat_openid string 用户openid
      * @return_param cmd string 执行路径
-     * @remark 1: 无
+     * @remark 1: 没有绑定手机号，请求登录接口 带上并qq_openid参数绑定 2: 直接返回用户登录的参数
      * @number 4
      */
     public function qq(WechatRequest $request)

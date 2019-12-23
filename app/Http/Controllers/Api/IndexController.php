@@ -21,7 +21,7 @@ class IndexController
      * @description 主页
      * @method get
      * @url index/index
-     * @return {"code":200,"data":{"slide":["images\/d8e900942611cc96ce31dc3f97f72ef9.jpg","images\/d2f43208c379ddea0764bede954f6665.jpg"],"notice":[{"id":2,"title":"\u5173\u4e8e\u6cf0\u4ed5\u8fbe\u5b98\u7f51\u5168\u65b0\u6539\u7248\u4e0a\u7ebf\u7684\u901a\u77e5"},{"id":1,"title":"\u5173\u4e8e\u9f0e\u6602APP1.0\u4e0a\u7ebf\u901a\u77e5"}],"crow":[{"id":1,"code":"40621","title":"\u4f17\u7b792\u53f7","target_amount":"10000.0000","total_amount":"10000.0000","status":"end","run_status":"run","created_at":"2019-12-14 00:00:00","start_at":"2019-12-13","end_at":1607322304,"diff_day":359},{"id":2,"code":"10425","title":"\u4f17\u7b7932\u53f7","target_amount":"100000.0000","total_amount":"0.0000","status":"funding","run_status":"stop","created_at":"2019-12-12 08:24:50","start_at":null,"end_at":null,"loading":0}]},"message":"ok"}
+     * @return {"code":200,"data":{"slide":["images\/012a6678968c9d484bc266321d1a7f47.jpg","images\/f2c3a3e07580b8f0a0476fe9c5056465.jpg"],"overall":{"BTC":{"current_price":52987.44,"current_price_usd":7563.8,"change_percent":6.09},"ETH":{"current_price":935.5,"current_price_usd":133.54,"change_percent":4.96},"BCH":{"current_price":1370.81,"current_price_usd":195.68,"change_percent":4.67}},"notice":[{"id":2,"title":"\u901a\u77e52"},{"id":1,"title":"\u901a\u77e51"}],"crow":[{"id":1,"code":"28635","title":"\u8ba1\u52121\u53f7","target_amount":"10000.0000","total_amount":"100.0000","status":"funding","run_status":"stop","created_at":"2019-12-19 10:04:53","start_at":null,"end_at":null,"loading":1},{"id":2,"code":"93857","title":"\u8ba1\u52122","target_amount":"10000.0000","total_amount":"10000.0000","status":"end","run_status":"run","created_at":"2019-12-20 17:23:59","start_at":"2019-12-20","end_at":1607937914,"loading":100,"diff_day":357}]},"message":"ok"}
      * @return_param slide string 幻灯
      * @return_param notice string 通知
      * @return_param crow string 最后一页
@@ -39,7 +39,7 @@ class IndexController
             ->select('id', 'code', 'title', 'target_amount', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
             ->where('status', Crowdfunding::STATUS_FUNDING)
             ->orWhere('run_status', Crowdfunding::RUN_START)
-            ->get()->map(function ($value) {
+            ->limit(2)->get()->map(function ($value) {
 
                 $value->loading = $value->percent;
 
@@ -66,6 +66,7 @@ class IndexController
 
     private function overall()
     {
+
         return Cache::remember('hangqing', 15, function () {
             $eth = 'https://dncapi.bqiapp.com/api/coin/web-coinrank?page=1&type=-1&pagesize=100&webp=1';
             $guzzle = new \GuzzleHttp\Client();
@@ -74,7 +75,8 @@ class IndexController
             $arr = [];
             foreach ($eth['data'] as $value) {
                 if (in_array($value['name'], ['BTC', 'ETH', 'BCH'])) {
-                    $arr[$value['name']] = [
+                    $arr[] = [
+                        'name'=>$value['name'],
                         'current_price' => $value['current_price'],
                         'current_price_usd' => $value['current_price_usd'],
                         'change_percent' => $value['change_percent']

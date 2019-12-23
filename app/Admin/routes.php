@@ -22,6 +22,10 @@ Route::group([
 
     $router->resource('slides', SlideController::class);
     $router->resource('crowd-fundings', CrowController::class);
+    $router->resource('crowd-wait',CrowWaitController::class);
+    $router->resource('crowd-run',CrowRunController::class);
+    $router->resource('crowd-end',CrowEndController::class);
+
 
     $router->resource('notices', NoticeController::class);
 
