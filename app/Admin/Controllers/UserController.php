@@ -141,7 +141,7 @@ class UserController extends AdminController
             $form->mobile('phone', '电话')->readonly();
             $form->text('name', '昵称');
             $form->image('headimgurl', '头像')->uniqueName()->removable();
-            $form->text('parent_id', '上线id');
+         //   $form->text('parent_id', '上线id');
             $form->select('parent_id', '上线电话（修改请写邀请码）')->options(function ($id) {
                 $user = User::find($id);
                 if ($user) {

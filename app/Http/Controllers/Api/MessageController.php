@@ -18,7 +18,7 @@ class MessageController
      * @description 消息首页
      * @method get
      * @url message/index
-     * @return {"code":200,"data":{"count":3,"bus":"量化已结束","notice":"关于泰仕达官网全新改版上线的通知"}}
+     * @return {"code":200,"data":{"count":3,"bus":{"content":"\u91cf\u5316\u5df2\u7ed3\u675f","created_at":"2019-12-18 17:11:21"},"notice":{"title":"\u5173\u4e8e\u6cf0\u4ed5\u8fbe\u5b98\u7f51\u5168\u65b0\u6539\u7248\u4e0a\u7ebf\u7684\u901a\u77e5","created_at":"2019-12-10 08:34:01"}}}
      * @return_param count string 业务提醒未读数量
      * @return_param bus string 业务提醒消息内容
      * @return_param notice string 系统通知消息内容
@@ -28,9 +28,10 @@ class MessageController
     public function index(){
         $user = \Auth::guard('api')->user();
         $count = Message::query()->where('user_id', $user->id)->where('is_read',0)->count();
-        $content = Message::query()->where('user_id', $user->id)->where('is_read',0)->orderByDesc('id')->value('content');
+        $content = Message::query()->where('user_id', $user->id)->where('is_read',0)->orderByDesc('id')->select('content','created_at')->first();
 
-        return response()->json(['code'=>200,'data'=>['count'=>$count,'bus'=>$content,'notice'=>Notice::query()->orderByDesc('id')->value('title')]]);
+        $notice = Notice::query()->orderByDesc('id')->select('title','created_at')->first();
+        return response()->json(['code'=>200,'data'=>['count'=>$count,'bus'=>$content,'notice'=>$notice]]);
     }
 
     /**
