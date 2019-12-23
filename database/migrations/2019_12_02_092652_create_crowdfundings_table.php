@@ -35,7 +35,6 @@ class CreateCrowdfundingsTable extends Migration
             $table->integer('start_at')->nullable();
             $table->integer('end_at')->nullable();
             $table->string('allow')->nullable();
-            $table->string('noallow')->nullabel();
             $table->string('status')->default(\App\Models\Crowdfunding::STATUS_FUNDING);
             $table->string('run_status')->default(\App\Models\Crowdfunding::RUN_STOP);
             $table->timestamp('created_at', 0)->nullable();

@@ -17,6 +17,10 @@ class Yes extends RowAction
 
     public function handle(Model $model)
     {
+        if($model->crow->status == Crowdfunding::STATUS_END && $model->crow->run_status == Crowdfunding::RUN_STOP){
+            return $this->response()->error('该计划已经停止,不能撤销');
+        }
+
         if ($model->status != OrderCancel::STATUS_WAIT) {
             return $this->response()->error('不能重复审核.');
         }

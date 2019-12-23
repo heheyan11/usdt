@@ -36,7 +36,7 @@ class IndexController
         $notice = Notice::query()->select('id', 'title')->orderByDesc('id')->get();
 
         $crow = Crowdfunding::query()
-            ->select('id', 'code', 'title', 'target_amount', 'total_amount', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
+            ->select('id', 'code', 'title', 'target_amount', 'total_amount','income', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
             ->where('status', Crowdfunding::STATUS_FUNDING)
             ->orWhere('run_status', Crowdfunding::RUN_START)
             ->limit(2)->get()->map(function ($value) {

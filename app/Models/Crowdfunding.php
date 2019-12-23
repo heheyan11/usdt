@@ -31,7 +31,7 @@ class Crowdfunding extends Model
 
 
     protected $fillable = ['code', 'url','total_amount','target_amount', 'user_count', 'status', 'start_at','end_at',
-    'title','allow','noallow'
+    'title','allow'
     ];
 
    // protected $dates = ['start_at','end_at'];
