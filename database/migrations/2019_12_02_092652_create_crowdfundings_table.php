@@ -27,7 +27,7 @@ class CreateCrowdfundingsTable extends Migration
             $table->unsignedMediumInteger('run');
             $table->unsignedDecimal('target_amount', 15, 4);
             $table->unsignedDecimal('total_amount', 15, 4)->default(0);
-            $table->unsignedDecimal('income',15,4)->default(0);
+            $table->unsignedDecimal('income',28,4)->default(0);
 
             $table->unsignedSmallInteger('user_count')->default(0);
             $table->string('url')->nullable();

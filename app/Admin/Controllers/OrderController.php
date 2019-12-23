@@ -44,7 +44,10 @@ class OrderController extends Controller
         $grid->column('amount', '数量');
         $grid->column('rate', '手续费%');
         $grid->column('shouxu', '手续费');
+
         $grid->column('status','状态')->using(OrderTi::$stateMap)->label(['danger','success','primary']);
+
+        $grid->column('verify', '记录验证')->using(OrderTi::$verMap)->label(['danger','success','primary']);
 
         $grid->column('created_at', '创建时间');
 

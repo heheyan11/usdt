@@ -28,8 +28,9 @@ class Send extends RowAction
         return $this->response()->error('条件不满足，请检查仓位是否满以及是否运行.');
     }
 
-    public function form()
+    public function form($model)
     {
+        $this->text('income','累计已发放')->default($model->income)->readonly();
         $this->text('amount', '发放额度')->rules('regex:/^[0-9]+(.[0-9]{1,4})?$/');
     }
 

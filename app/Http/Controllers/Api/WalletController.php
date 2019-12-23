@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\VerifyException;
 use App\Http\Requests\TiRequest;
+use App\Jobs\VerifyMoney;
 use App\Models\ChongOrder;
 use App\Models\OrderTi;
 use App\Models\User;
@@ -64,7 +65,9 @@ class WalletController
             $param['shouxu'] = $shouxu;
             $wallet->amount = bsub($wallet->amount, badd($param['amount'], $shouxu));
             $wallet->save();
-            $user->orderti()->create($param);
+            $ti = $user->orderti()->create($param);
+
+            dispatch(new VerifyMoney($user->id,$ti->id));
         });
         return response()->json(['code' => 200, 'message' => '提交成功，请等待审核']);
     }

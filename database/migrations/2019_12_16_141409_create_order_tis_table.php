@@ -15,10 +15,11 @@ class CreateOrderTisTable extends Migration
     {
         Schema::create('order_tis', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->index('user_id');
             $table->decimal('amount',15,4);
             $table->decimal('rate',15,4);
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(\App\Models\OrderTi::STATUS_WAIT);
+            $table->tinyInteger('verify')->default(\App\Models\OrderTi::VER_WAIT);
             $table->timestamp('created_at');
         });
     }
