@@ -9,6 +9,8 @@ use Encore\Admin\Grid;
 
 class CrowEndController extends CommonCrowController
 {
+
+    protected $title = '已结束';
     protected function getWhere()
     {
         return function($query){

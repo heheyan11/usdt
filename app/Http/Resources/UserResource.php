@@ -23,7 +23,8 @@ class UserResource extends Resource
             'phone' => substr_replace($this->phone, '****', 3, 4),
             'sex' => $this->sex,
             'card' => $card ? $card : [],
-            'paypass' => $this->paypass ? 1 : 0
+            'paypass' => $this->paypass ? 1 : 0,
+            'share_code'=> $this->share_code
          ];
     }
 }

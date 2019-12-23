@@ -26,9 +26,10 @@ class UserController
      * @description 我的信息
      * @method get
      * @url user/index
-     * @return {"code":200,"data":{"username":null,"headimgurl":"http:\/\/img14.360buyimg.com\/mobilecms\/s250x250_jfs\/t1\/36474\/28\/2429\/517543\/5cb9743aE168ee756\/c70039f29f10f6b7.jpg","phone":"132****3333","sex":0,"card":["\u90ed*\u7136","1****************9"],"paypass":0,"password:1"},"message":"ok"}
+     * @return {"code":200,"data":{"id":13,"username":"\u5f20\u9f99","headimgurl":"headimg.jpg","phone":"133****6424","sex":1,"card":["\u90ed*\u7136","1****************9"],"paypass":1,"share_code":791105},"message":"ok"}
      * @return_param paypass int 是否设置支付密码1已设置0未设置
      * @return_param sex int 0未知1男2女
+     * @return_param share_code int 分项码
      * @remark 如果没有认证 card 返回空数组
      * @number 1
      */

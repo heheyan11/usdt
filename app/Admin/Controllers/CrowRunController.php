@@ -11,6 +11,8 @@ use Encore\Admin\Grid;
 
 class CrowRunController extends CommonCrowController
 {
+
+    protected $title = '运行中';
     protected function getWhere()
     {
         return function($query){
