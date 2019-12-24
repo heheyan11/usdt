@@ -222,7 +222,7 @@ class UserController
     /**
      * showdoc
      * @catalog 我的
-     * @title 我的收益
+     * @title 我的收益记录
      * @description 我的收益记录
      * @method get
      * @url user/incomelog
@@ -276,8 +276,8 @@ class UserController
     /**
      * showdoc
      * @catalog 我的
-     * @title 团队收益
-     * @description 团队收益详情
+     * @title 团队收益记录
+     * @description 团队收益记录
      * @method get
      * @url user/teamincomelog
      * @return {"current_page":1,"data":[{"title":"\u8d21\u732e\u5956 \u7531\uff1a1337****424\u63d0\u4f9b","amount":"2000.0000","income":"15.9040","created_at":"2019-12-17"},{"title":"\u76f4\u63a8\u597d\u53cb1337****424\u63d0\u4f9b","amount":"2000.0000","income":"198.8000","created_at":"2019-12-17"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/teamincomelog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/teamincomelog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/teamincomelog","per_page":30,"prev_page_url":null,"to":2,"total":2}

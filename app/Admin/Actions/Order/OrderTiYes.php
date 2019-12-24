@@ -30,7 +30,7 @@ class OrderTiYes extends RowAction
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
             'form_params'=>$param
         ]);
-        $rs = json_decode($response->getBody()->getContents(), true); 
+        $rs = json_decode($response->getBody()->getContents(), true);
         if ($rs['errcode'] == 0) {
             $model->status = OrderTi::STATUS_YES;
 

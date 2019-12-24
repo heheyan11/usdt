@@ -48,6 +48,7 @@ class WalletController
      * @method post
      * @param password 必填 string 支付密码
      * @param amount 必填 string 提币数量
+     * @param address 必填 string 钱包地址
      * @url wallet/withdraw
      * @return {"code":200,"message":'提交成功，请等待审核'}
      * @remark 无

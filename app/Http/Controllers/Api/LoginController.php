@@ -14,6 +14,7 @@ use App\Models\Wechat;
 use App\Services\SmsService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends BasePass
 {
@@ -44,9 +45,19 @@ class LoginController extends BasePass
 
         $param = $request->input();
 
+        if(Cache::has('res'.$param['phone'])){
+            $time = Cache::get('res'.$param['phone']);
+            if(time() - $time < 3){
+                throw new VerifyException('请您休息一下');
+            }
+        }else{
+            Cache::put('res'.$param['phone'],time(),1);
+        }
+ 
         $pass = null;
-        if (isset($param['code'])) {
 
+        if (isset($param['code'])) {
+            //TODO:  验证
             /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
              if ($res['code'] != 200) {
                  return response()->json(['code'=>413,'message'=>'验证失败']);
@@ -68,6 +79,7 @@ class LoginController extends BasePass
                         $insert['parent_id'] = $res['id'];
                     }
                 }
+
                 \DB::transaction(function () use ($insert, $param) {
                     $user = User::create($insert);
                     $guzzle = new \GuzzleHttp\Client();

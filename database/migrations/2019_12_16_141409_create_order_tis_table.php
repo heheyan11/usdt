@@ -20,6 +20,7 @@ class CreateOrderTisTable extends Migration
             $table->decimal('rate',15,4);
             $table->tinyInteger('status')->default(\App\Models\OrderTi::STATUS_WAIT);
             $table->tinyInteger('verify')->default(\App\Models\OrderTi::VER_WAIT);
+            $table->decimal('shouxu',10,4);
             $table->string('address');
             $table->timestamp('created_at');
         });
