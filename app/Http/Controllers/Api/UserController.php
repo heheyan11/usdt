@@ -30,6 +30,7 @@ class UserController
      * @return_param paypass int 是否设置支付密码1已设置0未设置
      * @return_param sex int 0未知1男2女
      * @return_param share_code int 分项码
+     * @return_param level int 等级0到5
      * @remark 如果没有认证 card 返回空数组
      * @number 1
      */
