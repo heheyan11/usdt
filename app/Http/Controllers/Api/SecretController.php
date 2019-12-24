@@ -105,9 +105,10 @@ class SecretController
      * @description 修改登录密码
      * @method post
      * @url secret/setpass
-     * @param password 可选 string 用户密码
+     * @param password 必填 string 要修改的密码
      * @param phone 必填 string 用户手机
      * @param code 可选 string 手机验证码
+     * @param oldpass 可选 string 旧密码
      * @return {"code":200,"message":'修改密码成功'}
      * @return_param code string 200：修改登录密码成功； 0：修改登录密码失败
      * @remark 登录前：提交phone和code,登陆后提交oldpass
@@ -116,6 +117,13 @@ class SecretController
     public function setLoginPass()
     {
         $param = request()->input();
+        if(!isset($param['password'])){
+            throw new VerifyException('缺少参数');
+        }
+        if(strlen($param['password'])<6){
+            throw new VerifyException('新密码不能少于6位');
+        }
+
         if (isset($param['code'])) {
 
             if (!isset($param['phone'])) {
