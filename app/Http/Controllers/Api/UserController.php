@@ -26,7 +26,7 @@ class UserController
      * @description 我的信息
      * @method get
      * @url user/index
-     * @return {"code":200,"data":{"id":13,"username":"\u5f20\u9f99","headimgurl":"headimg.jpg","phone":"133****6424","sex":1,"card":["\u90ed*\u7136","1****************9"],"paypass":1,"share_code":791105},"message":"ok"}
+     * @return {"code":200,"data":{"id":13,"username":"\u5f20\u9f99","headimgurl":"headimg.jpg","phone":"133****6424","sex":1,"card":["\u90ed*\u7136","1****************9"],"paypass":1,"share_code":791105,"level": 0},"message":"ok"}
      * @return_param paypass int 是否设置支付密码1已设置0未设置
      * @return_param sex int 0未知1男2女
      * @return_param share_code int 分项码
