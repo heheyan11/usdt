@@ -43,6 +43,7 @@ class OrderController extends Controller
         $grid->user()->phone('用户');
         $grid->column('amount', '数量');
         $grid->column('rate', '手续费%');
+        $grid->column('address','地址');
         $grid->column('shouxu', '手续费');
 
         $grid->column('status','状态')->using(OrderTi::$stateMap)->label(['danger','success','primary']);

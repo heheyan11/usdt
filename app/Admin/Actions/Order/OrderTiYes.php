@@ -14,13 +14,13 @@ class OrderTiYes extends RowAction
 
     public function handle(Model $model)
     {
-        $address = UserWallet::query()->where('user_id',$model->user_id)->value('address');
+
         $param = [
             'symbol' => 'usdt',
             'merchantId' => '123456',
             'orderAmount' => $model->amount,
             'signType' => 'MD5',
-            'address' =>  $address
+            'address' =>  $model->address
         ];
         $param = $this->getSign($param);
         $guzzle = new \GuzzleHttp\Client();
@@ -30,7 +30,7 @@ class OrderTiYes extends RowAction
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
             'form_params'=>$param
         ]);
-        $rs = json_decode($response->getBody()->getContents(), true);
+        $rs = json_decode($response->getBody()->getContents(), true); 
         if ($rs['errcode'] == 0) {
             $model->status = OrderTi::STATUS_YES;
 

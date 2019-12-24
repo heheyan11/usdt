@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderTi extends Model
 {
     CONST UPDATED_AT = null;
-    protected $fillable = ['amount', 'rate', 'status', 'shouxu'];
+    protected $fillable = ['amount', 'rate', 'status', 'shouxu','address'];
 
     CONST STATUS_WAIT = 0;
     CONST STATUS_YES = 1;

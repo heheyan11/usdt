@@ -40,7 +40,19 @@ class WalletController
         return response()->json(['code' => 200, 'data' => $data, 'message' => 'ok']);
     }
 
-    //用户提现
+    /**
+     * showdoc
+     * @catalog 我的钱包
+     * @title 提币
+     * @description 提币
+     * @method post
+     * @param password 必填 string 支付密码
+     * @param amount 必填 string 提币数量
+     * @url wallet/withdraw
+     * @return {"code":200,"message":'提交成功，请等待审核'}
+     * @remark 无
+     * @number 1
+     */
     public function withDraw(TiRequest $request)
     {
 

@@ -234,18 +234,20 @@ class SecretController
      * @title 修改支付密码
      * @description 修改支付密码
      * @method post
-     * @url secret/setpass
+     * @url secret/changepaypass
      * @param password 必填 string 用户密码
-     * @param code 必填 string 手机验证码
-     * @param oldpass 必填 string 旧密码
+     * @param code 可选 string 手机验证码
+     * @param oldpass 可选 string 旧密码
      * @return {"code":200,"message":'修改密码成功'}
      * @return_param code string 200：修改支付密码成功； 0：修改支付密码失败
      * @remark 无
      * @number 6
      */
-    public function changePayPass(RegisterRequest $request)
+    public function changePayPass(SetpassRequest $request)
     {
         $param = $request->input();
+
+
 
         if (isset($param['code'])) {
             $user = \Auth::guard('api')->user();

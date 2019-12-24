@@ -34,6 +34,7 @@ Route::post('recharge', 'WalletController@recharge');
 
 
 Route::post('secret/setpass', 'SecretController@setLoginPass');
+Route::post('secret/changepaypass', 'SecretController@changePayPass');
 
 Route::post('login', 'LoginController@login')->name('login');
 Route::post('refresh', 'LoginController@refresh');
