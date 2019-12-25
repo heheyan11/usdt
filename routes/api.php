@@ -44,21 +44,17 @@ Route::get('logout', 'LoginController@logout');
 Route::post('upload', 'UploadContoller@uploadImg');
 
 Route::get('index/help', 'IndexController@help');
-Route::post('index/feedback', 'IndexController@feedback');
 
-Route::get('testt', function () {
-    //   app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['用户升级队列异常']);
-    //dd(Cache::forget('test'));
-    //return Cache::increment('test');
-});
+
+Route::get('message/index', 'MessageController@index');
+Route::get('message/notice', 'MessageController@notice');
+
+
 
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('crow/buy', 'CrowController@buy');
     Route::post('crow/quit', 'CrowController@quit');
-
-
-
 
     Route::get('wallet/index', 'WalletController@index');
     Route::post('wallet/withdraw', 'WalletController@withDraw');
@@ -83,10 +79,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/friend', 'UserController@friend');
 
     Route::post('article/parise', 'ArticleController@parise');
+    Route::post('index/feedback', 'IndexController@feedback');
 
-    Route::get('message/index', 'MessageController@index');
     Route::get('message/buslist', 'MessageController@buslist');
-    Route::get('message/notice', 'MessageController@notice');
     Route::get('message/noticedetail', 'MessageController@noticedetail');
 
 });

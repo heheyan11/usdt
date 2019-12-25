@@ -25,13 +25,17 @@ class MessageController
      * @remark 业务提醒显示未读数量，系统通知不显示
      * @number 1
      */
-    public function index(){
+    public function index()
+    {
         $user = \Auth::guard('api')->user();
-        $count = Message::query()->where('user_id', $user->id)->where('is_read',0)->count();
-        $content = Message::query()->where('user_id', $user->id)->where('is_read',0)->orderByDesc('id')->select('content','created_at')->first();
-
-        $notice = Notice::query()->orderByDesc('id')->select('title','created_at')->first();
-        return response()->json(['code'=>200,'data'=>['count'=>$count,'bus'=>$content,'notice'=>$notice]]);
+        $count = 0;
+        $bus = [];
+        if ($user) {
+            $count = Message::query()->where('user_id', $user->id)->where('is_read', 0)->count();
+            $bus = Message::query()->where('user_id', $user->id)->where('is_read', 0)->orderByDesc('id')->select('content', 'created_at')->first();
+        }
+        $notice = Notice::query()->orderByDesc('id')->select('title', 'created_at')->first();
+        return response()->json(['code' => 200, 'data' => ['count' => $count, 'bus' => $bus, 'notice' => $notice]]);
     }
 
     /**
@@ -45,7 +49,8 @@ class MessageController
      * @remark 业务提醒显示未读数量，系统通知不显示
      * @number 1
      */
-    public function buslist(){
+    public function buslist()
+    {
         $param = request()->input();
         $user = \Auth::guard('api')->user();
         $page_size = $param['page_size'] ?? 30;
@@ -53,7 +58,7 @@ class MessageController
         $res = Message::query()->where('user_id', $user->id)->orderBy('is_read')->orderByDesc('id')->paginate($page_size);
 
         $data = $res->getCollection();
-        Message::query()->whereIn('id',$data->pluck('id'))->update(['is_read'=>1]);
+        Message::query()->whereIn('id', $data->pluck('id'))->update(['is_read' => 1]);
         return response()->json($res);
     }
 
@@ -68,7 +73,8 @@ class MessageController
      * @remark 无
      * @number 1
      */
-    public function notice(){
+    public function notice()
+    {
         $param = request()->input();
         $page_size = $param['page_size'] ?? 30;
         $res = Notice::query()->orderByDesc('id')->select('id', 'title')->paginate($page_size);
@@ -87,13 +93,14 @@ class MessageController
      * @remark 无
      * @number 1
      */
-    public function noticedetail(){
+    public function noticedetail()
+    {
         $id = request()->input('id');
-        if(!$id){
+        if (!$id) {
             throw new VerifyException('缺少参数');
         }
-        $res=Notice::find($id);
-        return response()->json(['code'=>200,'data'=>$res]);
+        $res = Notice::find($id);
+        return response()->json(['code' => 200, 'data' => $res]);
     }
 
 }
