@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Crowdfunding;
+use App\Models\OrderCancel;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -38,7 +39,7 @@ class CrowdfundingResource extends Resource
             }
         }
         $is_cancel = 0;
-        if ($user && $this->ordercancels()->where('user_id', $user->id)->exists()) {
+        if ($user && $this->ordercancels()->where('user_id', $user->id)->where('status',OrderCancel::STATUS_WAIT)->exists()) {
             $is_cancel = 1;
         }
         return [
