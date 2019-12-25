@@ -73,7 +73,8 @@ class LoginController extends BasePass
                     throw new VerifyException('密码不少于6位');
                 }
                 $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
-                if (isset($param['parent_phone'])) {
+
+                if (isset($param['fcode'])) {
                     $res = User::query()->where('share_code', $param['fcode'])->first();
                     if(!$res){
                         throw new VerifyException('邀请码不存在');

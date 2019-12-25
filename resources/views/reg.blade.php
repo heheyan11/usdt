@@ -88,11 +88,11 @@
             </div>
             <div class="box_01">
                 <label for="pass" class="box">密码:</label>
-                <input type="number" name="password" placeholder="请输入6-12位登录密码" id="pass"/>
+                <input type="password" name="password" placeholder="请输入6-12位登录密码" id="pass"/>
             </div>
             <div class="box_01">
                 <label for="pay" class="box">支付密码:</label>
-                <input type="number" name="paypass" maxlength="6" placeholder="请输入支付密码" id="pay" />
+                <input type="password" name="paypass" maxlength="6" placeholder="请输入支付密码" id="pay" />
             </div>
             <div class="box_01">
                 <label for="yzm" class="box">验证码:</label>
@@ -128,18 +128,19 @@
         if(fcode!=''&&fcode!=null){
             $("#inv").val(GetQueryString("fcode"));
         }
-
         function onAjaxError(xhr, textStatus, error) {
             if(xhr.status==422){
                 err = xhr.responseJSON
-                var html = '<div>';
+
+
                 $.each(err.errors,function(){
                     $.each(this,function(){
-                        html+= this+'<br>';
+                        alert(this)
+                        return;
                     })
+                    return;
                 });
-                html += '</div>';
-                swal({content: $(html)[0], icon: 'error'})
+
             }else if (xhr.status === 500) {
                 alert('系统错误');
             }
@@ -201,7 +202,7 @@
                 return false;
             }
 
-            $.post('/api/login',{phone:phone,password:password,code:code,fcode:fcode,token:token},function(data){
+            $.post('/register',{phone:phone,password:password,code:code,fcode:fcode,_token:token},function(data){
                 if(data.code==200){
                     alert('注册成功');
                 }

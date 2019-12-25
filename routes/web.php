@@ -19,10 +19,7 @@ Route::get('up',function(){
     return view('test.upload') ;
 });
 
-Route::get('/',function (){
-    \Illuminate\Support\Facades\Cache::forget('hangqing');
-$re = \Illuminate\Support\Facades\Cache::get('usdt');
+Route::view('/', 'reg');
 
-dd($re);die;
-});
+Route::post('register','LoginController@register');
 

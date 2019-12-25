@@ -76,7 +76,7 @@ class IndexController
             foreach ($eth['data'] as $value) {
                 if (in_array($value['name'], ['BTC', 'ETH', 'BCH' ,'USDT'])) {
                     if($value['name']=='USDT'){
-                        $rs = Cache::forever('usdt',$value['current_price']); 
+                         Cache::forever('usdt',$value['current_price']);
                     }
                     $arr[] = [
                         'name'=>$value['name'],

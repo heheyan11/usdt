@@ -42,7 +42,8 @@ $(function(){
 
     function onAjaxError(xhr, textStatus, error) {
         if(xhr.status==422){
-            err = xhr.responseJSON
+            err = xhr.responseJSON;
+
             var html = '<div>';
             $.each(err.errors,function(){
                 $.each(this,function(){
@@ -50,7 +51,7 @@ $(function(){
                 })
             });
             html += '</div>';
-            swal({content: $(html)[0], icon: 'error'})
+            //swal({content: $(html)[0], icon: 'error'})
         }else if (xhr.status === 500) {
             alert('系统错误');
         }

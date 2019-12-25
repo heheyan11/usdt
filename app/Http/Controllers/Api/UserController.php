@@ -228,7 +228,7 @@ class UserController
      * @title 我的收益记录
      * @description 我的收益记录
      * @method get
-     * @param date 必选 string 日期2019-10
+     * @param date 可选 string 日期2019-10
      * @url user/incomelog
      * @return {"current_page":1,"data":[{"title":"\u8d21\u732e\u5956 \u7531\uff1a1337****424\u63d0\u4f9b","amount":"2000.0000","income":"15.9040","created_at":"2019-12-17"},{"title":"\u76f4\u63a8\u597d\u53cb1337****424\u63d0\u4f9b","amount":"2000.0000","income":"198.8000","created_at":"2019-12-17"},{"title":"\u4f17\u7b792\u53f7","amount":"8000.0000","income":"6361.6000","created_at":"2019-12-17"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/incomelog","per_page":30,"prev_page_url":null,"to":3,"total":3}
      * @return_param current_page string 当前页

@@ -22,8 +22,8 @@ class VerifyException extends \Exception
 
         $message = [
             'message' => '验证失败',
-            'error' => [
-                $this->message
+            'errors' => [
+                [$this->message]
             ],
         ];
 
