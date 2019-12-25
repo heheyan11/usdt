@@ -20,7 +20,9 @@ Route::get('up',function(){
 });
 
 Route::get('/',function (){
+    \Illuminate\Support\Facades\Cache::forget('hangqing');
+$re = \Illuminate\Support\Facades\Cache::get('usdt');
 
-
+dd($re);die;
 });
 

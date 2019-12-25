@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\UserWallet;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
- 
+
 class WalletController
 {
     private $privateKey = ['merchantkey' => 'dhasdiuahwfiuagbvkasbdiasbkcgafbasdas'];
@@ -39,7 +39,7 @@ class WalletController
         $config = get_conf();
         $data->refund_rate = $config['refund_rate'];
         $data->min_ti = $config['min_ti'];
-        $data->usdt = \Illuminate\Support\Facades\Cache::get('usdt') || 6.9;
+        $data->usdt = \Illuminate\Support\Facades\Cache::get('usdt');
         return response()->json(['code' => 200, 'data' => $data, 'message' => 'ok']);
     }
 
