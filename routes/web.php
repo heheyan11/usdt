@@ -23,3 +23,7 @@ Route::view('/', 'reg');
 
 Route::post('register','LoginController@register');
 
+Route::get('test',function(){
+
+
+});

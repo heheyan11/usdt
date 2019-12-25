@@ -213,6 +213,10 @@ class CrowController
             if (!$crow) {
                 throw new VerifyException('计划失效');
             }
+            if ($crow->run_status == Crowdfunding::RUN_STOP && $crow->status == Crowdfunding::STATUS_END) {
+                throw new VerifyException('该计划已停止');
+            }
+
             $mycrow = UserCrow::query()->where('user_id', $user->id)->where('crowdfunding_id', $crow->id)->first();
 
             if ($crow->status != Crowdfunding::STATUS_FUNDING) {
@@ -225,7 +229,9 @@ class CrowController
             if ($conf['min_money'] > $param['amount']) {
                 throw new VerifyException('申请数量不低于' . $conf['min_money']);
             }
+            //余额减少
             $user->wallet()->update(['amount' => bcsub($user->wallet->amount, $param['amount'])]);
+
             if ($mycrow) {
                 $mycrow->update(['amount' => badd($mycrow->amount, $param['amount'])]);
             } else {
@@ -233,8 +239,10 @@ class CrowController
             }
             $crow->total_amount = $total;
             if ($crow->status == Crowdfunding::STATUS_FUNDING && $total == $crow->target_amount) {
-                $crow->status = Crowdfunding::STATUS_WAIT;
+                $crow->status = $crow->run_status == Crowdfunding::RUN_START ? Crowdfunding::STATUS_END : Crowdfunding::STATUS_WAIT;
             }
+
+
             $crow->user_count++;
             $crow->save();
         });

@@ -196,11 +196,13 @@
                 return false;
             }
 
-            if(fcode.length!=6||!/^[0-9]*$/.test(fcode)){
-                alert('邀请码应为6位数字');
-                $("[name=fcode]").val("");
-                return false;
-            }
+             if(fcode!='') {
+                 if (fcode.length != 6 || !/^[0-9]*$/.test(fcode)) {
+                     alert('邀请码应为6位数字');
+                     $("[name=fcode]").val("");
+                     return false;
+                 }
+             }
 
             $.post('/register',{phone:phone,password:password,code:code,fcode:fcode,_token:token},function(data){
                 if(data.code==200){

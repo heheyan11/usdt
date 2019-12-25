@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Crowdfunding;
 use App\Models\LogIncome;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -44,10 +45,23 @@ class SendHong implements ShouldQueue
             $two_rate = bdiv($this->plan->two_rate, 100);
             $lead_rate = bdiv($this->plan->lead_rate, 100);
             $record = [];
+
+            if($this->plan->status==Crowdfunding::STATUS_FUNDING){
+                //要发放的
+                $weiman = bmul($this->amount,bdiv($this->plan->total_amount,$this->plan->target_amount));
+                //不满的
+                $weiman = bsub($this->amount,$weiman);
+                $plantIncome = badd($plantIncome, $weiman);
+                $record[] = ['message' => '仓位未满', 'amount' => $weiman];
+            }
+
             foreach ($plans as $value) {
                 if ($value->amount <= 0) continue;
+
                 //我拿到的总钱数
-                $baseMoney = bmul($this->amount, bdiv($value->amount, $this->plan->total_amount));
+                $baseMoney = bmul($this->amount, bdiv($value->amount, $this->plan->target_amount));
+
+
 
                 if ($this->plan->manage_rate > 0) {
                     $shouxu = bmul($baseMoney, $manage_rate);

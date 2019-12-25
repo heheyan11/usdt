@@ -21,7 +21,7 @@ class Send extends RowAction
             return $this->response()->error('发送额度太小.');
         }
 
-        if ($model->run_status == Crowdfunding::RUN_START && $model->status == Crowdfunding::STATUS_END) {
+        if ($model->run_status == Crowdfunding::RUN_START) {
             dispatch(new SendHong($model, $amount));
             return $this->response()->success('后台发放中.')->refresh();
         }

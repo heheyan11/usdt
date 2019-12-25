@@ -52,7 +52,7 @@ class LoginController extends Controller
             }
             $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
 
-            if (isset($param['fcode'])) {
+            if (!empty($param['fcode'])) {
                 $res = User::query()->where('share_code', $param['fcode'])->first();
                 if(!$res){
                     throw new VerifyException('邀请码不存在');
