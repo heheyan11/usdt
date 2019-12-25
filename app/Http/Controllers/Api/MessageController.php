@@ -34,7 +34,7 @@ class MessageController
             $count = Message::query()->where('user_id', $user->id)->where('is_read', 0)->count();
 
             $bus = Message::query()->where('user_id', $user->id)->where('is_read', 0)->orderByDesc('id')->select('content', 'created_at')->first();
-            if($bus){
+            if(!$bus){
                 $bus = [];
             }
         }
