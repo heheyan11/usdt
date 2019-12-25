@@ -159,8 +159,9 @@ class CrowController
      * @catalog 财富计划
      * @title 搜索列表
      * @description 搜索返回内容
+     * @param
      * @method get
-     * @url crow/index
+     * @url crow/search
      * @return {"code":200,"data":[{"title":"\u4f17\u7b792\u53f7","id":1},{"title":"\u4f17\u7b7932\u53f7","id":2}],"message":"ok"}
      * @remark 无
      * @number 4

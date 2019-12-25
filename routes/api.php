@@ -19,6 +19,8 @@ Route::get('index/index', 'IndexController@index');
 Route::get('index/article', 'IndexController@article');
 Route::get('article/detail', 'ArticleController@detail');
 
+
+
 Route::post('wechat', 'OauthController@wechat');
 Route::post('pushcode', 'WechatController@wechat');
 Route::post('qq', 'OauthController@qq');
@@ -41,6 +43,9 @@ Route::post('refresh', 'LoginController@refresh');
 Route::get('logout', 'LoginController@logout');
 Route::post('upload', 'UploadContoller@uploadImg');
 
+Route::get('index/help', 'IndexController@help');
+Route::post('index/feedback', 'IndexController@feedback');
+
 Route::get('testt', function () {
     //   app(\App\Services\SmsService::class)->sendSMSTemplate('14836549',[13379246424],['用户升级队列异常']);
     //dd(Cache::forget('test'));
@@ -52,8 +57,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('crow/buy', 'CrowController@buy');
     Route::post('crow/quit', 'CrowController@quit');
 
-    Route::get('index/help', 'IndexController@help');
-    Route::post('index/feedback', 'IndexController@feedback');
+
+
 
     Route::get('wallet/index', 'WalletController@index');
     Route::post('wallet/withdraw', 'WalletController@withDraw');
