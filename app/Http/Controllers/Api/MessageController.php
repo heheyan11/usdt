@@ -69,8 +69,8 @@ class MessageController
     /**
      * showdoc
      * @catalog 消息
-     * @title 系统通知
-     * @description 系统通知列表
+     * @title 系统消息列表
+     * @description 系统消息列表
      * @method get
      * @url message/notice
      * @return {"current_page":1,"data":[{"id":2,"title":"\u5173\u4e8e\u6cf0\u4ed5\u8fbe\u5b98\u7f51\u5168\u65b0\u6539\u7248\u4e0a\u7ebf\u7684\u901a\u77e5"},{"id":1,"title":"\u5173\u4e8e\u9f0e\u6602APP1.0\u4e0a\u7ebf\u901a\u77e5"}],"first_page_url":"http:\/\/192.168.10.10\/api\/message\/notice?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/message\/notice?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/message\/notice","per_page":30,"prev_page_url":null,"to":2,"total":2}

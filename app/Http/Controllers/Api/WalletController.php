@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\UserWallet;
 use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
-
+use lluminate\Support\Facades;
 class WalletController
 {
     private $privateKey = ['merchantkey' => 'dhasdiuahwfiuagbvkasbdiasbkcgafbasdas'];
