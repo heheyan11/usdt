@@ -18,3 +18,9 @@ Route::get('/', function () {
 Route::get('up',function(){
     return view('test.upload') ;
 });
+
+Route::get('/',function (){
+
+
+});
+

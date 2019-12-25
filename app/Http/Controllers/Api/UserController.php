@@ -192,6 +192,7 @@ class UserController
      * @return_param my string 我申请的
      * @return_param friend string 好友申请的
      * @return_param income string 总收益
+     * @return_param usdt string 比率
      * @remark 无
      * @number 1
      */
@@ -203,19 +204,21 @@ class UserController
         $data = Cache::remember('user_income' . $user->id, 15, function () use ($user) {
 
             //我长在参与量化
-            $my = UserCrow::whereHas('crow',function($query){
-                $query->where('run_status','<>',Crowdfunding::RUN_STOP)->where('status','<>',Crowdfunding::STATUS_END);
+            $my = UserCrow::whereHas('crow', function ($query) {
+                $query->where('run_status', '<>', Crowdfunding::RUN_STOP)->where('status', '<>', Crowdfunding::STATUS_END);
             })->where('user_id', $user->id)->sum('amount');
 
             //好友正在参与量化
-            $friend = UserCrow::whereHas('crow',function($query){
-                $query->where('run_status','<>',Crowdfunding::RUN_STOP)->where('status','<>',Crowdfunding::STATUS_END);
+            $friend = UserCrow::whereHas('crow', function ($query) {
+                $query->where('run_status', '<>', Crowdfunding::RUN_STOP)->where('status', '<>', Crowdfunding::STATUS_END);
             })->whereIn('user_id', $user->children()->pluck('id'))->sum('amount');
 
             //我的总收益
             $income = LogIncome::query()->where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->sum('income');
             return ['my' => $my, 'friend' => $friend, 'income' => $income];
         });
+        $data['usdt'] = Cache::get('usdt') || 6.9;
+
         return response()->json(['code' => 200, 'message' => 'ok', 'data' => $data]);
     }
 
@@ -225,6 +228,7 @@ class UserController
      * @title 我的收益记录
      * @description 我的收益记录
      * @method get
+     * @param date 必选 string 日期2019-10
      * @url user/incomelog
      * @return {"current_page":1,"data":[{"title":"\u8d21\u732e\u5956 \u7531\uff1a1337****424\u63d0\u4f9b","amount":"2000.0000","income":"15.9040","created_at":"2019-12-17"},{"title":"\u76f4\u63a8\u597d\u53cb1337****424\u63d0\u4f9b","amount":"2000.0000","income":"198.8000","created_at":"2019-12-17"},{"title":"\u4f17\u7b792\u53f7","amount":"8000.0000","income":"6361.6000","created_at":"2019-12-17"}],"first_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","from":1,"last_page":1,"last_page_url":"http:\/\/192.168.10.10\/api\/user\/incomelog?page=1","next_page_url":null,"path":"http:\/\/192.168.10.10\/api\/user\/incomelog","per_page":30,"prev_page_url":null,"to":3,"total":3}
      * @return_param current_page string 当前页
@@ -241,9 +245,25 @@ class UserController
     public function incomelog()
     {
         $param = request()->input();
+
+
         $user = \Auth::guard('api')->user();
+
         $page_size = $param['page_size'] ?? 30;
-        $res = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
+
+        $query = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO);
+
+        if (!empty($param['date'])) {
+            list($y, $m, $d) = explode('-', $param['date']);
+            if (!checkdate($m, $d, $y)) {
+                throw new VerifyException('日期格式错误');
+            }
+            $whereTime = getMonthDays($param['date']);
+            $query->where('created_at', '>', $whereTime['start'])->where('created_at', '<', $whereTime['end']);
+        }
+        $res = $query->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
+
+
         return response()->json($res);
     }
 
@@ -300,6 +320,7 @@ class UserController
         $res = LogIncome::where('user_id', $user->id)->where('is_team', LogIncome::TEAM_YES)->select('title', 'amount', 'income', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
+
     /**
      * showdoc
      * @catalog 我的
@@ -325,6 +346,7 @@ class UserController
         $res = OrderTi::where('user_id', $user->id)->select('amount', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
+
     /**
      * showdoc
      * @catalog 我的

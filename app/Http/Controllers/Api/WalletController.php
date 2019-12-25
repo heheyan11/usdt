@@ -9,6 +9,7 @@ use App\Models\ChongOrder;
 use App\Models\OrderTi;
 use App\Models\User;
 use App\Models\UserWallet;
+use Illuminate\Filesystem\Cache;
 use Illuminate\Http\Request;
 
 class WalletController
@@ -27,6 +28,7 @@ class WalletController
      * @return_param address string 钱包地址
      * @return_param refund_rate string 提币手续费%
      * @return_param min_ti string 最小提笔数量
+     * @return_param usdt string 约等于比率
      * @remark 无
      * @number 1
      */
@@ -37,6 +39,7 @@ class WalletController
         $config = get_conf();
         $data->refund_rate = $config['refund_rate'];
         $data->min_ti = $config['min_ti'];
+        $data->usdt = Cache::get('usdt') || 6.9;
         return response()->json(['code' => 200, 'data' => $data, 'message' => 'ok']);
     }
 

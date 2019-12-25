@@ -74,10 +74,11 @@ class LoginController extends BasePass
                 }
                 $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
                 if (isset($param['parent_phone'])) {
-                    $res = User::query()->where('share_code', $param['parent_phone'])->first();
-                    if($res){
-                        $insert['parent_id'] = $res['id'];
+                    $res = User::query()->where('share_code', $param['fcode'])->first();
+                    if(!$res){
+                        throw new VerifyException('邀请码不存在');
                     }
+                    $insert['parent_id'] = $res['id'];
                 }
 
                 \DB::transaction(function () use ($insert, $param) {
