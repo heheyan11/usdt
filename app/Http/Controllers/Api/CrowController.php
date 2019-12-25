@@ -268,7 +268,7 @@ class CrowController
         if (!$crow) {
             throw new VerifyException('计划失效');
         }
-        if ($crow->run_status == Crowdfunding::RUN_STOP) {
+        if ($crow->run_status == Crowdfunding::RUN_STOP && $crow->status == Crowdfunding::STATUS_END) {
             throw new VerifyException('该计划已停止');
         }
 
