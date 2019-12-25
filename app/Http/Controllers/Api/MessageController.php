@@ -32,7 +32,11 @@ class MessageController
         $bus = [];
         if ($user) {
             $count = Message::query()->where('user_id', $user->id)->where('is_read', 0)->count();
+
             $bus = Message::query()->where('user_id', $user->id)->where('is_read', 0)->orderByDesc('id')->select('content', 'created_at')->first();
+            if($bus){
+                $bus = [];
+            }
         }
         $notice = Notice::query()->orderByDesc('id')->select('title', 'created_at')->first();
         return response()->json(['code' => 200, 'data' => ['count' => $count, 'bus' => $bus, 'notice' => $notice]]);

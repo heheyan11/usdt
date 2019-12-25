@@ -50,7 +50,6 @@ Route::get('message/index', 'MessageController@index');
 Route::get('message/notice', 'MessageController@notice');
 
 
-
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('crow/buy', 'CrowController@buy');
