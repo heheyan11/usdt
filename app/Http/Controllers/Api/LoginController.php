@@ -9,6 +9,7 @@ use App\Exceptions\InternalException;
 
 use App\Exceptions\VerifyException;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Qq;
 use App\Models\User;
 use App\Models\Wechat;
 use App\Services\SmsService;
@@ -45,13 +46,13 @@ class LoginController extends BasePass
 
         $param = $request->input();
 
-        if(Cache::has('res'.$param['phone'])){
-            $time = Cache::get('res'.$param['phone']);
-            if(time() - $time < 3){
+        if (Cache::has('res' . $param['phone'])) {
+            $time = Cache::get('res' . $param['phone']);
+            if (time() - $time < 3) {
                 throw new VerifyException('请您休息一下');
             }
-        }else{
-            Cache::put('res'.$param['phone'],time(),1);
+        } else {
+            Cache::put('res' . $param['phone'], time(), 1);
         }
 
         $pass = null;
@@ -76,7 +77,7 @@ class LoginController extends BasePass
 
                 if (isset($param['fcode'])) {
                     $res = User::query()->where('share_code', $param['fcode'])->first();
-                    if(!$res){
+                    if (!$res) {
                         throw new VerifyException('邀请码不存在');
                     }
                     $insert['parent_id'] = $res['id'];
@@ -98,18 +99,32 @@ class LoginController extends BasePass
                     //如果绑定微信
                     if (isset($param['wechat_openid'])) {
                         $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
-                        $user->wechat()->associate($wechat);
+                        $user->qq()->associate($wechat);
                         $user->headimgurl = $wechat->headimgurl;
                         $user->save();
                     }
                     //如果绑定QQ
                     if (isset($param['qq_openid'])) {
-                        $qq = Wechat::query()->where('openid', $param['qq_openid'])->first();
+                        $qq = Qq::query()->where('openid', $param['qq_openid'])->first();
                         $user->wechat()->associate($qq);
-                        $user->headimgurl = $wechat->headimgurl;
+                        $user->headimgurl = $qq->headimgurl;
                         $user->save();
                     }
                 });
+            } else {
+                if (isset($param['wechat_openid'])) {
+                    $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
+                    $user->wechat()->associate($wechat);
+                    $user->headimgurl = $wechat->headimgurl;
+                    $user->save();
+                } elseif (isset($param['qq_openid'])) {
+                    $qq = Qq::query()->where('openid', $param['qq_openid'])->first();
+                    $user->qq()->associate($qq);
+                    $user->headimgurl = $qq->headimgurl;
+                    $user->save();
+                } else {
+                    throw new VerifyException('少参数');
+                }
             }
             $pass = config('app.private_pass');
         } else {
