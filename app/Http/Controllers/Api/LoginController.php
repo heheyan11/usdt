@@ -46,14 +46,14 @@ class LoginController extends BasePass
 
         $param = $request->input();
 
-       /* if (Cache::has('res' . $param['phone'])) {
-            $time = Cache::get('res' . $param['phone']);
-            if (time() - $time < 3) {
-                throw new VerifyException('请您休息一下');
-            }
-        } else {
-            Cache::put('res' . $param['phone'], time(), 1);
-        }*/
+        /* if (Cache::has('res' . $param['phone'])) {
+             $time = Cache::get('res' . $param['phone']);
+             if (time() - $time < 3) {
+                 throw new VerifyException('请您休息一下');
+             }
+         } else {
+             Cache::put('res' . $param['phone'], time(), 1);
+         }*/
 
         $pass = null;
 
@@ -99,15 +99,17 @@ class LoginController extends BasePass
                     //如果绑定微信
                     if (isset($param['wechat_openid'])) {
                         $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
-                        $user->qq()->associate($wechat);
+                        $user->wechat()->associate($wechat);
                         $user->headimgurl = $wechat->headimgurl;
+                        $user->name = $wechat->nickname;
                         $user->save();
                     }
                     //如果绑定QQ
                     if (isset($param['qq_openid'])) {
                         $qq = Qq::query()->where('openid', $param['qq_openid'])->first();
-                        $user->wechat()->associate($qq);
+                        $user->qq()->associate($qq);
                         $user->headimgurl = $qq->headimgurl;
+                        $user->name = $qq->nickname;
                         $user->save();
                     }
                 });
@@ -115,14 +117,12 @@ class LoginController extends BasePass
                 if (isset($param['wechat_openid'])) {
                     $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
                     $user->wechat()->associate($wechat);
-                    $user->headimgurl = $wechat->headimgurl;
                     $user->save();
                 } elseif (isset($param['qq_openid'])) {
                     $qq = Qq::query()->where('openid', $param['qq_openid'])->first();
                     $user->qq()->associate($qq);
-                    $user->headimgurl = $qq->headimgurl;
                     $user->save();
-                }else{
+                } else {
                     throw new VerifyException('少参数');
                 }
             }
