@@ -217,7 +217,7 @@ class UserController
             $income = LogIncome::query()->where('user_id', $user->id)->where('is_team', LogIncome::TEAM_NO)->sum('income');
             return ['my' => $my, 'friend' => $friend, 'income' => $income];
         });
-        $data['usdt'] = Cache::get('usdt') || 6.9;
+        $data['usdt'] = Cache::get('usdt');
 
         return response()->json(['code' => 200, 'message' => 'ok', 'data' => $data]);
     }
