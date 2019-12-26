@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\WechatRequest;
 use App\Models\Qq;
 use App\Models\Wechat;
+use Illuminate\Support\Facades\Storage;
 
 class OauthController
 {
@@ -39,6 +40,11 @@ class OauthController
 
         //没有授权
         if (!$wechat) {
+            $disk = config('admin.upload.disk');
+            $storage = Storage::disk($disk);
+
+            $data['headimgurl'] = 'image/' . str_random(13) . time() . '.jpeg';
+            $storage->put($data['headimgurl'], file_get_contents($data['headimgurl']));
 
             Wechat::create($data);
             return response()->json([
@@ -86,6 +92,12 @@ class OauthController
         $qq = Qq::with('user')->where('openid', $data['openid'])->first();
         //没有授权
         if (!$qq) {
+
+            $disk = config('admin.upload.disk');
+            $storage = Storage::disk($disk);
+            $data['headimgurl'] = 'image/' . str_random(13) . time() . '.jpeg';
+            $storage->put($data['headimgurl'], file_get_contents($data['headimgurl']));
+
             Qq::create($data);
             return response()->json([
                 'code' => 200,

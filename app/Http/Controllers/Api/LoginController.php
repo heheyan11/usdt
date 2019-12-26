@@ -45,18 +45,7 @@ class LoginController extends BasePass
     {
 
         $param = $request->input();
-
-        /* if (Cache::has('res' . $param['phone'])) {
-             $time = Cache::get('res' . $param['phone']);
-             if (time() - $time < 3) {
-                 throw new VerifyException('请您休息一下');
-             }
-         } else {
-             Cache::put('res' . $param['phone'], time(), 1);
-         }*/
-
         $pass = null;
-
         if (isset($param['code'])) {
             //TODO:  验证
             /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
