@@ -49,13 +49,7 @@ Route::get('index/help', 'IndexController@help');
 Route::get('message/index', 'MessageController@index');
 Route::get('message/notice', 'MessageController@notice');
 
-Route::get('testt',function (){
-    $disk = config('admin.upload.disk');
-    $storage = \Storage::disk($disk);
-    $data['nickname'] = 'image/'.str_random(13).'jpeg';
-    $storage->put($data['nickname'],file_get_contents('http://thirdwx.qlogo.cn/mmopen/vi_32/5VuBpMlaaMX7JDACoN3MSeibkaAzib16VaE7tGnITOOk4ibyR4RLtHXc5MXad6FL1b1ypHzKOse4olHErdXRXgKMg/132'));
-    dd($data);die;
-});
+
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('crow/buy', 'CrowController@buy');
