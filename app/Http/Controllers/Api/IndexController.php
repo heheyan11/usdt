@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\VerifyException;
 use App\Models\Active;
 use App\Models\Article;
-use App\Models\ArticleParise;
 use App\Models\Crowdfunding;
 use App\Models\Notice;
 use App\Models\Slide;
@@ -37,7 +36,7 @@ class IndexController
         $notice = Notice::query()->select('id', 'title')->orderByDesc('id')->get();
 
         $crow = Crowdfunding::query()
-            ->select('id', 'code', 'title', 'target_amount', 'total_amount', 'income', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
+            ->select('id', 'code', 'title', 'target_amount', 'total_amount','income', 'status', 'run_status', 'created_at', 'start_at', 'end_at')
             ->where('status', Crowdfunding::STATUS_FUNDING)
             ->orWhere('run_status', Crowdfunding::RUN_START)
             ->limit(2)->get()->map(function ($value) {
@@ -75,12 +74,12 @@ class IndexController
             $eth = json_decode($response->getBody()->getContents(), true);
             $arr = [];
             foreach ($eth['data'] as $value) {
-                if (in_array($value['name'], ['BTC', 'ETH', 'BCH', 'USDT'])) {
-                    if ($value['name'] == 'USDT') {
-                        Cache::forever('usdt', $value['current_price']);
+                if (in_array($value['name'], ['BTC', 'ETH', 'BCH' ,'USDT'])) {
+                    if($value['name']=='USDT'){
+                         Cache::forever('usdt',$value['current_price']);
                     }
                     $arr[] = [
-                        'name' => $value['name'],
+                        'name'=>$value['name'],
                         'current_price' => $value['current_price'],
                         'current_price_usd' => $value['current_price_usd'],
                         'change_percent' => $value['change_percent']
@@ -127,20 +126,13 @@ class IndexController
      * @return_param id int id
      * @return_param title string 标题
      * @return_param content string 内容
-     * @return_param is_parise string 是否点赞
      * @remark 无
      * @number 1
      */
     public function help()
     {
-        $art = Article::query()->where('article_cate_id', 2)->select('id', 'title', 'content')->get();
-        $user = \Auth::guard('api')->user();
-        if ($user && $art->parise()->where('user_id', $user->id)->where('status', ArticleParise::STATUS_YES)->exists()) {
-            $art->is_parise = ArticleParise::STATUS_YES;
-        } else {
-            $art->is_parise = ArticleParise::STATUS_NO;
-        }
-        return response()->json(['code' => 200, 'data' => $art]);
+        $res = Article::query()->where('article_cate_id', 2)->select('id', 'title', 'content')->get();
+        return response()->json(['code' => 200, 'data' => $res]);
     }
 
     /**
