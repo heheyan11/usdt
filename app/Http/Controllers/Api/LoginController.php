@@ -88,7 +88,7 @@ class LoginController extends BasePass
                     //如果绑定微信
                     if (isset($param['wechat_openid'])) {
                         $wechat = Wechat::query()->where('openid', $param['wechat_openid'])->first();
-                        $user->wechat()->associate($wechat); 
+                        $user->wechat()->associate($wechat);
                         $user->name = $wechat->nickname;
                         $user->save();
                     }
@@ -109,9 +109,7 @@ class LoginController extends BasePass
                     $qq = Qq::query()->where('openid', $param['qq_openid'])->first();
                     $user->qq()->associate($qq);
                     $user->save();
-                } else {
-                    throw new VerifyException('少参数');
-                }
+                } 
             }
             $pass = config('app.private_pass');
         } else {
