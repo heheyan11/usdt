@@ -14,11 +14,10 @@ use Laravel\Passport\Client;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('version', 'IndexController@version');
 Route::get('index/index', 'IndexController@index');
 Route::get('index/article', 'IndexController@article');
 Route::get('article/detail', 'ArticleController@detail');
-
 
 
 Route::post('wechat', 'OauthController@wechat');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\VerifyException;
 use App\Models\Active;
@@ -160,6 +160,23 @@ class IndexController
         Active::create($param);
 
         return response()->json(['code' => 200, 'message' => '提交成功,感谢您的反馈']);
+    }
+
+    /**
+     * showdoc
+     * @catalog 主页
+     * @title 版本号
+     * @description 版本号
+     * @method get
+     * @url version
+     * @return {"version":"1.0.1","type":"v1"}
+     * @return_param version string 版本号
+     * @return_param type string 请求版本号
+     * @remark 无
+     * @number 1
+     */
+    public function version(){
+        return ['version' => '1.0.1', 'type' => 'v1'];
     }
 
 }
