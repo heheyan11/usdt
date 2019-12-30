@@ -117,9 +117,7 @@
 
 <script src="http://libs.baidu.com/jquery/1.10.2/jquery.js"></script>
 <script>
-
-
-
+    var token = '{{csrf_token()}}';
     $(function () {
         function GetQueryString(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -137,6 +135,8 @@
         function onAjaxError(xhr, textStatus, error) {
             if (xhr.status == 422) {
                 err = xhr.responseJSON
+
+
                 $.each(err.errors, function () {
                     $.each(this, function () {
                         alert(this)
@@ -144,10 +144,12 @@
                     })
                     return;
                 });
+
             } else if (xhr.status === 500) {
                 alert('系统错误');
             }
         }
+
         var regex = /^1[3456789]\d{9}$/;
         var count;
         $('.get').click(function () {
@@ -158,13 +160,15 @@
             }
             count = 60;
 
-            $.post('http://123.57.186.157/api/sms', {phone: phone}, function (data) {
+
+            $.post('sms', {phone: phone,_token:token}, function (data) {
                 if (data.code == 200) {
                     if(data.is_register==1){
                         alert('该手机已被注册')
                         return;
                     }
                     alert('发送成功');
+
                     var timer = setInterval(function () {
                         count--;
                         $(".get").html(count + "秒间隔");
@@ -210,11 +214,12 @@
                 }
             }
 
-            $.post('http://123.57.186.157/api/register', {
+            $.post('/register', {
                 phone: phone,
                 paypass: paypass,
                 code: code,
                 fcode: fcode,
+                _token: token
             }, function (data) {
                 if (data.code == 200) {
                     alert('注册成功');

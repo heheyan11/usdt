@@ -25,8 +25,6 @@ Route::post('pushcode', 'WechatController@wechat');
 Route::post('qq', 'OauthController@qq');
 Route::get('sms', 'SecretController@code');
 Route::post('smscheck', 'SecretController@smscheck');
-Route::post('register','LoginController@register');
-
 Route::get('crow/index', 'CrowController@index');
 Route::get('crow/search', 'CrowController@search');
 Route::get('crow/detail', 'CrowController@detail');
