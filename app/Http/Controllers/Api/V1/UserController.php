@@ -12,6 +12,7 @@ use App\Models\Crowdfunding;
 use App\Models\LogIncome;
 use App\Models\OrderTi;
 use App\Models\User;
+use App\Models\UserCard;
 use App\Models\UserCrow;
 use App\Services\CardService;
 use Carbon\Carbon;
@@ -81,8 +82,8 @@ class UserController
     /**
      * showdoc
      * @catalog 我的
-     * @title 认证身份证
-     * @description 认证身份提交
+     * @title 身份证识别
+     * @description 身份证识别
      * @param face string 必填 正面照片(原样返回不要加域名)
      * @param back string 必填 反面照片(不要加域名)
      * @method post
@@ -98,22 +99,12 @@ class UserController
         $param = $request->input();
         $user = \Auth::guard('api')->user();
 
-        return response()->json(['code' => 200, 'message' => '认证成功', 'data' => ['name' => '李名', 'code' => '610523199205351155']]);
+
         if ($user->is_verify == 1) {
             throw new VerifyException('请勿重复审核');
         }
-
         $face = $service->checkImg($param['face'], 'face');
-        $verify = $service->checkStr($face['name'], $face['num']);
         $back = $service->checkImg($param['back'], 'back');
-
-        $param['name'] = $verify['name'];
-        $param['code'] = $verify['idNo'];
-        $param['province'] = $verify['province'];
-        $param['city'] = $verify['city'];
-        $param['county'] = $verify['county'];
-        $param['birthday'] = $verify['birthday'];
-        $param['age'] = $verify['age'];
 
         $param['address'] = $face['address'];
         $param['nationality'] = $face['nationality'];
@@ -123,13 +114,49 @@ class UserController
         $param['start_date'] = $back['start_date'];
         $param['end_date'] = $back['end_date'];
 
-        $rs = $user->card()->create($param);
+        UserCard::updateOrCreate(['user_id' => $user->id], $param);
+        return response()->json(['code' => 200, 'message' => '识别成功', 'data' => ['name' => $face['name'], 'code' => $face['num']]]);
+    }
+
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 认证身份证
+     * @description 认证身份提交
+     * @param name string 必填 姓名
+     * @param code string 必填 身份证
+     * @method post
+     * @url user/authcard
+     * @return {"code":200,"message":"\u8ba4\u8bc1\u6210\u529f"}
+     * @remark 无
+     * @number 1
+     */
+    public function authcard(CardService $service)
+    {
+
+        $param = request()->input();
+        $user = \Auth::guard('api')->user();
+
+        $card = UserCard::query()->where('user_id', $user->id)->first();
+        if (!$card) {
+            throw new VerifyException('请上传身份证照片');
+        }
+        
+        $verify = $service->checkStr($param['name'], $param['code']);
+        $param['name'] = $verify['name'];
+        $param['code'] = $verify['idNo'];
+        $param['province'] = $verify['province'];
+        $param['city'] = $verify['city'];
+        $param['county'] = $verify['county'];
+        $param['birthday'] = $verify['birthday'];
+        $param['age'] = $verify['age'];
+
+        $card->update($param);
         $user->is_verify = 1;
         $user->save();
 
-        if ($rs) {
-            return response()->json(['code' => 200, 'message' => '认证成功', 'data' => ['name' => $verify['name'], 'code' => $verify['idNo']]]);
-        }
+        return response()->json(['code' => 200, 'message' => '认证成功']);
     }
 
     /**

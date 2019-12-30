@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('user/index', 'UserController@index');
     Route::post('user/auth', 'UserController@auth');
+    Route::post('user/authcard', 'UserController@authcard');
     Route::post('user/changeinfo', 'UserController@changeInfo');
     Route::get('user/crows', 'UserController@crows');
 

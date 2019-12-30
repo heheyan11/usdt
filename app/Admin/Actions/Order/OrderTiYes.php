@@ -33,7 +33,6 @@ class OrderTiYes extends RowAction
         $rs = json_decode($response->getBody()->getContents(), true);
         if ($rs['errcode'] == 0) {
             $model->status = OrderTi::STATUS_YES;
-
             $model->save();
             return $this->response()->success('审核通过.')->refresh();
         }else{
