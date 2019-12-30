@@ -126,6 +126,47 @@ class LoginController extends BasePass
         return $this->blogin($param['phone'], $pass);
     }
 
+
+    public function register(RegisterRequest $request)
+    {
+
+        $param = $request->input();
+        if (!isset($param['code'])) {
+            throw new VerifyException('缺少参数');
+        }
+        $res = app(SmsService::class)->verifycode($param['phone'], $param['code']);
+        if ($res['code'] != 200) {
+            return response()->json(['code' => 413, 'message' => '验证失败']);
+        }
+        $user = User::query()->where('phone', $param['phone'])->first();
+        if ($user) {
+            throw  new VerifyException('该手机已注册');
+        }
+        $insert = ['phone' => $param['phone']];
+        if (!empty($param['fcode'])) {
+            $res = User::query()->where('share_code', $param['fcode'])->first();
+            if (!$res) {
+                throw new VerifyException('邀请码不存在');
+            }
+            $insert['parent_id'] = $res['id'];
+        }
+        \DB::transaction(function () use ($insert, $param) {
+            $user = User::create($insert);
+            $guzzle = new \GuzzleHttp\Client();
+            $url = 'http://39.107.156.221/api/GenerateAddress';
+            $response = $guzzle->get($url);
+            $rs = json_decode($response->getBody()->getContents(), true);
+            if ($rs['errcode'] != 0) {
+                throw new InternalException('注册地址错误');
+            }
+            $data = $rs['data']['eth'];
+            $data['kid'] = $data['id'];
+            $user->wallet()->create($data);
+            //event(new Registered($user));
+        });
+        return response()->json(['code' => 200, 'message' => 'ok']);
+    }
+
     /**
      * showdoc
      * @catalog 登录相关

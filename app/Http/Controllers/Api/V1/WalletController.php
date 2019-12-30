@@ -102,7 +102,7 @@ class WalletController
     {
         $param = request()->input();
         if (!$this->checkSign($param)) {
-            return 'error';
+            return response()->json(['code' => 414, 'message' => 'sign error']);
         }
         $wallet = UserWallet::query()->where('address', $param['address_to'])->first();
         if (!$wallet) {
