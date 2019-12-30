@@ -46,7 +46,9 @@ class LoginController extends BasePass
 
         $param = $request->input();
         $pass = null;
-        if (isset($param['code'])) {
+        if (!isset($param['code'])) {
+            throw new VerifyException('请输入手机验证码');
+        }
             //TODO:  验证
             /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
              if ($res['code'] != 200) {
@@ -64,13 +66,13 @@ class LoginController extends BasePass
                 }
                 $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
 
-                if (isset($param['fcode'])) {
+                /*if (isset($param['fcode'])) {
                     $res = User::query()->where('share_code', $param['fcode'])->first();
                     if (!$res) {
                         throw new VerifyException('邀请码不存在');
                     }
                     $insert['parent_id'] = $res['id'];
-                }
+                }*/
 
                 \DB::transaction(function () use ($insert, $param) {
                     $user = User::create($insert);
@@ -112,15 +114,14 @@ class LoginController extends BasePass
                 } 
             }
             $pass = config('app.private_pass');
-        } else {
+
+       /* else {
             if (!isset($param['password'])) {
                 throw new VerifyException('请输入密码');
             }
             $pass = $param['password'];
-        }
-        if (!$pass) {
-            return response()->json(['code' => 414, 'message' => '缺少参数code或password参数']);
-        }
+        }*/
+
         return $this->blogin($param['phone'], $pass);
     }
 
