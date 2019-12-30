@@ -31,6 +31,7 @@ class UserController
      * @return_param sex int 0未知1男2女
      * @return_param share_code int 分项码
      * @return_param level int 等级0到5
+     * @return_param fcode int 0没有上线其他显示
      * @remark 如果没有认证 card 返回空数组
      * @number 1
      */
@@ -38,6 +39,43 @@ class UserController
     {
         $user = \Auth::guard('api')->user();
         return response()->json(['code' => 200, 'data' => new UserResource($user), 'message' => 'ok']);
+    }
+
+    /**
+     * showdoc
+     * @catalog 我的
+     * @title 设置上线
+     * @description 设置上线
+     * @method post
+     * @url user/setfcode
+     * @return {"code":200,"phone":"135****5151","message":"设置成功"}
+     * @remark 如果没有认证 card 返回空数组
+     * @number 1
+     */
+    public function setfcode()
+    {
+        $fcode = request()->input('fcode');
+        $user = \Auth::guard('api')->user();
+        if ($user->parent_id) {
+            throw new VerifyException('已经有上线了');
+        }
+        if ($user->share_code == $fcode) {
+            throw new VerifyException('不能成为自己的下线');
+        }
+
+        $parent = User::query()->where('share_code', $fcode)->first();
+        if (!$parent) {
+            throw new VerifyException('没有该上线');
+        }
+        $user->parent_id = $parent->id;
+        $user->level = $parent->level + 1;
+        $user->path = $parent->path . $parent->id . '-';
+        $user->save();
+        if ($parent->is_directory == 0) {
+            $parent->is_directory = 1;
+            $parent->save();
+        }
+        return response()->json(['code' => 200, 'data' => str_phone($parent->phone), 'message' => 'ok']);
     }
 
     /**

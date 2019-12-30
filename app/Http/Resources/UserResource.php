@@ -25,6 +25,7 @@ class UserResource extends Resource
             'card' => $card ? $card : [],
             'paypass' => $this->paypass ? 1 : 0,
             'share_code'=> $this->share_code,
+            'fcode' => $this->parent_id ? str_phone($this->parent->phone) : 0,
             'level'=>$this->share_level
          ];
     }

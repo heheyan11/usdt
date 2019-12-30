@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/tilog', 'UserController@tilog');
     Route::get('user/orderchong', 'UserController@orderchong');
     Route::get('user/friend', 'UserController@friend');
+    Route::post('user/setfcode', 'UserController@setfcode');
 
     Route::post('article/parise', 'ArticleController@parise');
     Route::post('index/feedback', 'IndexController@feedback');
