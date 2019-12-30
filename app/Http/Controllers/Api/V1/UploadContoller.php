@@ -35,7 +35,7 @@ class UploadContoller
                     $return = ['code' => 200, 'data' => [$newFileName],'message'=>'上传成功'];
 
                 } else {
-                    throw new VerifyException('验证失败');
+                    throw new VerifyException('上传失败图片不能超多2M');
                 }
             }
         } else {
