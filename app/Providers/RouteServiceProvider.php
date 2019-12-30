@@ -80,6 +80,9 @@ class RouteServiceProvider extends ServiceProvider
                 break;
             case 'v2':
                 $this->namespace = 'App\Http\Controllers\Api\V2';
+                break;
+            default:
+                $this->namespace = 'App\Http\Controllers\Api\V1';
         }
     }
 }
