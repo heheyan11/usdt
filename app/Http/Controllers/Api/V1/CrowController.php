@@ -105,6 +105,7 @@ class CrowController
      * @return_param income string 累计收益
      * @return_param start_at string 量化启动时间
      * @return_param end_at string 量化结束时间
+     * @return_param url string 链接地址
      * @return_param created_at string 发布时间
      * @return_param status string 众筹状态:funding众筹中end众筹结束
      * @return_param run_status string 量化状态run量化中stop量化结束

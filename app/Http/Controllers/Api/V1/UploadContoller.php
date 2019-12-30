@@ -25,11 +25,10 @@ class UploadContoller
         $file = $request->file();
 
         if (!empty($file)) {
-
             foreach ($file as $key => $value) {
+                $res=  $value->isValid();
 
-                if ($value->isValid()) {
-
+                if ($res) {
                     $disk = config('admin.upload.disk');
                     $storage = Storage::disk($disk);
                     $newFileName = $storage->put('image',$value);

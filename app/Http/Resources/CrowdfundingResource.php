@@ -49,6 +49,7 @@ class CrowdfundingResource extends Resource
             'allow' => $this->allow,
             'manage_rate' => $this->manage_rate,
             'out_rate' => $this->out_rate,
+            'url'=>$this->url,
             'out_amount' => $this->out_amount,
             'target_amount' => $this->target_amount,
             'total_amount' => $this->total_amount,
