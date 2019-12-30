@@ -64,7 +64,7 @@ class LoginController extends BasePass
                 } elseif (isset($param['password']) && strlen($param['password']) < 6) {
                     throw new VerifyException('密码不少于6位');
                 }*/
-               
+
                 $insert = ['phone' => $param['phone'], 'password' =>config('app.private_pass')];
 
                 /*if (isset($param['fcode'])) {

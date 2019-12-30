@@ -26,8 +26,9 @@ class SecretController
      * @method get
      * @url sms
      * @param phone 必填 string 手机号
-     * @return {"code":200,"message":'短信发送成功'}
-     * @return_param code string 200：发送成功； 412：发送失败
+     * @return {"code":200,"message":'短信发送成功',"is_register":1}
+     * @return_param code string 200：发送成功412:发送失败
+     * @return_param is_register string 200：发送成功412：发送失败
      * @remark 无
      * @number 1
      */
@@ -35,11 +36,13 @@ class SecretController
     {
         $phone = $request->input('phone');
         //TODO:验证
-       // $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
-      /*  if ($res['code'] != 200) {
-            throw new BusException('短信发送失败', 412);
-        }*/
-        return response()->json(['code' => 200, 'message' => 'ok']);
+        // $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
+        /*  if ($res['code'] != 200) {
+              throw new BusException('短信发送失败', 412);
+          }*/
+        $register = User::query()->where('phone', $phone)->exists();
+
+        return response()->json(['code' => 200, 'is_register' => (int)$register, 'message' => 'ok']);
     }
 
 
@@ -66,7 +69,7 @@ class SecretController
         if ($res['code'] != 200) {
             throw new BusException('短信验证失败', 413);
         } else {*/
-            return response()->json(['code' => 200, 'message' => '短信验证成功']);
+        return response()->json(['code' => 200, 'message' => '短信验证成功']);
         //}
     }
 
@@ -117,10 +120,10 @@ class SecretController
     public function setLoginPass()
     {
         $param = request()->input();
-        if(!isset($param['password'])){
+        if (!isset($param['password'])) {
             throw new VerifyException('缺少参数');
         }
-        if(strlen($param['password'])<6){
+        if (strlen($param['password']) < 6) {
             throw new VerifyException('新密码不能少于6位');
         }
 
@@ -246,7 +249,6 @@ class SecretController
     public function changePayPass(SetpassRequest $request)
     {
         $param = $request->input();
-
 
 
         if (isset($param['code'])) {
