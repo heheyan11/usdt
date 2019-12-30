@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\VerifyException;
 use App\Http\Requests\CardRequest;
+use App\Http\Requests\IdcRequest;
 use App\Http\Requests\InfoRequest;
 use App\Http\Resources\UserResource;
 use App\Models\ChongOrder;
@@ -132,12 +133,10 @@ class UserController
      * @remark 无
      * @number 1
      */
-    public function authcard(CardService $service)
+    public function authcard(IdcRequest $request,CardService $service)
     {
-
-        $param = request()->input();
+        $param = $request->input();
         $user = \Auth::guard('api')->user();
-
         $card = UserCard::query()->where('user_id', $user->id)->first();
         if (!$card) {
             throw new VerifyException('请上传身份证照片');
