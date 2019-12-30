@@ -39,7 +39,7 @@ class LoginController extends Controller
         if($register){
             return response()->json(['code' => 200, 'is_register' => (int)$register, 'message' => 'ok']);
         }
-      
+
         $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
 
         if ($res['code'] != 200) {
