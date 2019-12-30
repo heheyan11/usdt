@@ -82,8 +82,8 @@ class UserController
     /**
      * showdoc
      * @catalog 我的
-     * @title 身份证识别
-     * @description 身份证识别
+     * @title 认证身份证识别
+     * @description 认证身份证识别
      * @param face string 必填 正面照片(原样返回不要加域名)
      * @param back string 必填 反面照片(不要加域名)
      * @method post
@@ -142,7 +142,7 @@ class UserController
         if (!$card) {
             throw new VerifyException('请上传身份证照片');
         }
-        
+
         $verify = $service->checkStr($param['name'], $param['code']);
         $param['name'] = $verify['name'];
         $param['code'] = $verify['idNo'];
