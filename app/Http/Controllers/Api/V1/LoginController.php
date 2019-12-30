@@ -58,13 +58,14 @@ class LoginController extends BasePass
             $user = User::query()->where('phone', $param['phone'])->first();
             if (!$user) {
                 //不传密码认为是验证码登录
-                if (!isset($param['password'])) {
+               /* if (!isset($param['password'])) {
                     throw new BusException('您没有注册', 425);
                     //穿密码认为是注册
                 } elseif (isset($param['password']) && strlen($param['password']) < 6) {
                     throw new VerifyException('密码不少于6位');
-                }
-                $insert = ['phone' => $param['phone'], 'password' => bcrypt($param['password'])];
+                }*/
+               
+                $insert = ['phone' => $param['phone'], 'password' =>config('app.private_pass')];
 
                 /*if (isset($param['fcode'])) {
                     $res = User::query()->where('share_code', $param['fcode'])->first();
