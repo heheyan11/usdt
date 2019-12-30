@@ -14,7 +14,7 @@ class CardService
     {
 
         $url = 'https://idenauthen.market.alicloudapi.com/idenAuthentication';
-        $appcode = "8da1eb29849949b5b30b30a61171070f";
+        $appcode = env('CARD_STR');
         $headers = array();
         array_push($headers, "Authorization:APPCODE " . $appcode);
         //根据API的要求，定义相对应的Content-Type
@@ -33,7 +33,7 @@ class CardService
     {
 
         $url = "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
-        $appcode = '8da1eb29849949b5b30b30a61171070f';
+        $appcode = env('CARD_STR');
         //如果没有configure字段，config设为空
         $config = ["side" => $type];
 

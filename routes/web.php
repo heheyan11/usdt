@@ -15,15 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 */
-Route::get('up',function(){
+/*Route::get('up',function(){
     return view('test.upload') ;
-});
+});*/
 
 Route::view('/', 'reg');
 
 Route::post('register','LoginController@register');
+Route::post('sms','LoginController@sms');
 
-Route::get('test',function(){
-
-
-});
