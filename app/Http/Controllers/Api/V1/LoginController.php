@@ -49,11 +49,11 @@ class LoginController extends BasePass
         if (!isset($param['code'])) {
             throw new VerifyException('请输入手机验证码');
         }
-            //TODO:  验证
-            /* $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
+
+             $res = app(SmsService::class)->verifycode($param['phone'],$param['code']);
              if ($res['code'] != 200) {
                  return response()->json(['code'=>413,'message'=>'验证失败']);
-            }*/
+            }
 
             $user = User::query()->where('phone', $param['phone'])->first();
             if (!$user) {

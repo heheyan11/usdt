@@ -35,11 +35,11 @@ class SecretController
     public function code(RegisterRequest $request)
     {
         $phone = $request->input('phone');
-        //TODO:验证
-        // $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
-        /*  if ($res['code'] != 200) {
-              throw new BusException('短信发送失败', 412);
-          }*/
+
+        $res = app(SmsService::class)->sendSmsCode($phone, '14835598');
+        if ($res['code'] != 200) {
+            throw new BusException('短信发送失败', 412);
+        }
         $register = User::query()->where('phone', $phone)->exists();
 
         return response()->json(['code' => 200, 'is_register' => (int)$register, 'message' => 'ok']);
@@ -64,13 +64,13 @@ class SecretController
     {
         $phone = $request->input('phone');
         $code = $request->input('code');
-        //TODO:验证
-        /*$res = app(SmsService::class)->verifycode($phone, $code);
+
+        $res = app(SmsService::class)->verifycode($phone, $code);
         if ($res['code'] != 200) {
             throw new BusException('短信验证失败', 413);
-        } else {*/
-        return response()->json(['code' => 200, 'message' => '短信验证成功']);
-        //}
+        } else {
+            return response()->json(['code' => 200, 'message' => '短信验证成功']);
+        }
     }
 
     /**
@@ -170,11 +170,11 @@ class SecretController
     public function changePhone(RegisterRequest $request)
     {
         $param = $request->input();
-        //TODO:验证
-        /*$res = app(SmsService::class)->verifycode($param['phone'], $param['code']);
+
+        $res = app(SmsService::class)->verifycode($param['phone'], $param['code']);
         if ($res['code'] != 200) {
             throw new BusException('短信验证失败', 413);
-        }*/
+        }
         if (User::where('phone', $param['phone'])->exists()) {
             throw new VerifyException('该手机已存在');
         }
@@ -253,11 +253,11 @@ class SecretController
 
         if (isset($param['code'])) {
             $user = \Auth::guard('api')->user();
-            //TODO:验证
-            /*$res = app(SmsService::class)->verifycode($user->phone, $param['code']);
+
+            $res = app(SmsService::class)->verifycode($user->phone, $param['code']);
             if ($res['code'] != 200) {
                 return response()->json(['code' => 413, 'message' => '短信验证失败']);
-            }*/
+            }
         } elseif (isset($param['oldpass'])) {
 
             $user = \Auth::guard('api')->user();
