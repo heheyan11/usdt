@@ -7,7 +7,6 @@ use App\Models\Active;
 use App\Models\Article;
 use App\Models\Crowdfunding;
 use App\Models\Notice;
-use App\Models\Slide;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,7 +20,7 @@ class IndexController
      * @description 主页
      * @method get
      * @url index/index
-     * @return {"code":200,"data":{"slide":["images\/012a6678968c9d484bc266321d1a7f47.jpg","images\/f2c3a3e07580b8f0a0476fe9c5056465.jpg"],"overall":{"BTC":{"current_price":52987.44,"current_price_usd":7563.8,"change_percent":6.09},"ETH":{"current_price":935.5,"current_price_usd":133.54,"change_percent":4.96},"BCH":{"current_price":1370.81,"current_price_usd":195.68,"change_percent":4.67}},"notice":[{"id":2,"title":"\u901a\u77e52"},{"id":1,"title":"\u901a\u77e51"}],"crow":[{"id":1,"code":"28635","title":"\u8ba1\u52121\u53f7","target_amount":"10000.0000","total_amount":"100.0000","status":"funding","run_status":"stop","created_at":"2019-12-19 10:04:53","start_at":null,"end_at":null,"loading":1},{"id":2,"code":"93857","title":"\u8ba1\u52122","target_amount":"10000.0000","total_amount":"10000.0000","status":"end","run_status":"run","created_at":"2019-12-20 17:23:59","start_at":"2019-12-20","end_at":1607937914,"loading":100,"diff_day":357}]},"message":"ok"}
+     * @return {"code":200,"data":{"slide": [{"thumb": "images/6af5ae244499851139294811eba2fc77.png","id": 28}],"overall":{"BTC":{"current_price":52987.44,"current_price_usd":7563.8,"change_percent":6.09},"ETH":{"current_price":935.5,"current_price_usd":133.54,"change_percent":4.96},"BCH":{"current_price":1370.81,"current_price_usd":195.68,"change_percent":4.67}},"notice":[{"id":2,"title":"\u901a\u77e52"},{"id":1,"title":"\u901a\u77e51"}],"crow":[{"id":1,"code":"28635","title":"\u8ba1\u52121\u53f7","target_amount":"10000.0000","total_amount":"100.0000","status":"funding","run_status":"stop","created_at":"2019-12-19 10:04:53","start_at":null,"end_at":null,"loading":1},{"id":2,"code":"93857","title":"\u8ba1\u52122","target_amount":"10000.0000","total_amount":"10000.0000","status":"end","run_status":"run","created_at":"2019-12-20 17:23:59","start_at":"2019-12-20","end_at":1607937914,"loading":100,"diff_day":357}]},"message":"ok"}
      * @return_param slide string 幻灯
      * @return_param notice string 通知
      * @return_param crow string 最后一页
@@ -32,7 +31,7 @@ class IndexController
     public function index()
     {
 
-        $slide = Slide::query()->where('title', 0)->pluck('thumb');
+        $slide = Article::query()->where('article_cate_id', 3)->select('thumb','id')->get();
         $notice = Notice::query()->select('id', 'title')->orderByDesc('id')->get();
 
         $crow = Crowdfunding::query()
@@ -114,7 +113,6 @@ class IndexController
         $res = Article::where('article_cate_id', 1)->select('id', 'title', 'thumb', 'short_content', 'created_at')->orderByDesc('id')->paginate($page_size);
         return response()->json($res);
     }
-
     /**
      * showdoc
      * @catalog 主页

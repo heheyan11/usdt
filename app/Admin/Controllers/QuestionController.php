@@ -29,9 +29,7 @@ class QuestionController extends AdminController
     {
         $grid = new Grid(new Article);
         $grid->model()->where('article_cate_id',2);
-
         $grid->model()->orderByDesc('id');
-
         $grid->filter(function ($filter) {
             $filter->expand();
             $filter->column(1 / 2, function ($filter) {

@@ -27,14 +27,14 @@ class ArticleController extends AdminController
     {
         $grid = new Grid(new Article);
 
-        $grid->model()->where('article_cate_id','<>',2)->orderByDesc('id');
+        $grid->model()->whereNotIn('article_cate_id',[2,3])->orderByDesc('id');
 
         $grid->filter(function ($filter) {
             $filter->expand();
             $filter->column(1 / 2, function ($filter) {
                 $filter->like('title', '名称');
             });
-            $filter->column(1 / 2, function ($filter) {
+           /* $filter->column(1 / 2, function ($filter) {
                 $filter->where(function ($query) {
                     $cid = $this->input;
                     if (empty($cid)) return;
@@ -53,7 +53,7 @@ class ArticleController extends AdminController
                         $query->where('article_cate_id', $cid);
                     }
                 }, '所属分类')->select(ArticleCate::selectOptions(null, '全部'));
-            });
+            });*/
         });
         $grid->column('id', 'id');
         $grid->column('title', '标题');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\InternalException;
 use App\Exceptions\VerifyException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -43,5 +44,61 @@ class UploadContoller
         }
 
         return $return;
+    }
+
+
+    public function card(){
+
+        $url = "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
+        $appcode = env('CARD_STR');
+        //如果没有configure字段，config设为空
+        $config = ["side" => 'face'];
+
+        $disk = \Storage::disk('qiniu');
+        try {
+            $base64 = base64_encode($disk->get('zheng.jpg'));
+        }catch (\Exception $exception){
+            throw new InternalException('图片不存在，请重新上传');
+        }
+
+        $headers = array();
+
+        array_push($headers, "Authorization:APPCODE " . $appcode);
+        //根据API的要求，定义相对应的Content-Type
+        array_push($headers, "Content-Type" . ":" . "application/json; charset=UTF-8");
+
+        $request = array(
+            "image" => "$base64"
+        );
+        if (count($config) > 0) {
+            $request["configure"] = json_encode($config);
+        }
+        $body = json_encode($request);
+
+        $res = $this->http($url, $body, $headers);
+
+        dd($res);
+    }
+
+    public function http($url, $param, $headers, $method = 'POST')
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+
+        if (1 == strpos("$" . $url, "https://")) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $param);
+        $res = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        return ['code' => $httpCode, 'data' => json_decode($res, true)];
     }
 }

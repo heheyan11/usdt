@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\CardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\Client;
@@ -46,6 +47,8 @@ Route::get('index/help', 'IndexController@help');
 
 Route::get('message/index', 'MessageController@index');
 Route::get('message/notice', 'MessageController@notice');
+
+Route::get('card','UploadContoller@card');
 
 
 Route::group(['middleware' => 'auth:api'], function () {
